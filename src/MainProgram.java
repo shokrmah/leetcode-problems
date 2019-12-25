@@ -30,8 +30,15 @@ public class MainProgram {
 //		tn.left.right = new TreeNode(9);
 //		tn.right.right = new TreeNode(18);
 //		System.out.println(p.rangeSumBST(tn,7,15));
+//[0,0,0],[0,1,0],[0,0,0]
+		int[][] obstacles = new int[3][7];
+		obstacles[0] = new int[] { 0, 0, 0, 0, 0, 0, 0 };
+		obstacles[1] = new int[] { 0, 0, 0, 1, 0, 0, 0 };
+		obstacles[2] = new int[] { 0, 0, 0, 0, 0, 0, 0 };
 
-			System.out.print(p.checkPossibility(new int[] {4,2,3}));
+		System.out.print(p.uniquePathsWithObstacles(obstacles));
+
+		
 
 	}
 

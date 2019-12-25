@@ -1,4 +1,3 @@
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +14,136 @@ import java.util.Set;
 import java.util.Stack;
 
 public class Problems {
+
+	public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+		if (obstacleGrid.length == 0 && obstacleGrid[0].length == 0)
+			return 1;
+		if (obstacleGrid[0][0] == 1 || obstacleGrid[obstacleGrid.length - 1][obstacleGrid[0].length - 1] == 1)
+			return 0;
+
+//		List<Integer> iObstaclesIndexes = new ArrayList<Integer>();
+//		List<Integer> jObstaclesIndexes = new ArrayList<Integer>();
+//
+//		for (int i = 0; i < obstacleGrid.length; i++) {
+//			for (int j = 0; j < obstacleGrid[i].length; j++) {
+//				if (obstacleGrid[i][j] == 1) {
+//					iObstaclesIndexes.add(i);
+//					iObstaclesIndexes.add(j);
+//				}
+//
+//			}
+//		}
+
+		Set<String> visited = new HashSet<String>();
+
+		return countOfPaths(obstacleGrid, obstacleGrid.length - 1, obstacleGrid[0].length - 1, visited);
+	}
+
+	public int countOfPaths(int[][] obstacleGrid, int i, int j, Set<String> visited) {
+		if (obstacleGrid[i][j] == 1)
+			return 0;
+		else if (i == 0 && j == 0)
+			return 1;
+
+		if (i > 0 && j > 0) {
+			if (obstacleGrid[i - 1][j] == 0 && obstacleGrid[i][j - 1] == 0 && obstacleGrid[i - 1][j - 1] == 0) {
+				visited.add("" + (i - 1) + "" + (j - 1));
+
+				if (visited.contains("" + (i - 1) + "" + (j))) {
+					return countOfPaths(obstacleGrid, i, j - 1, visited)
+							+ countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
+				}
+				else if(visited.contains("" + (i) + "" + (j - 1))) {
+					return countOfPaths(obstacleGrid, i - 1, j, visited) + countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
+				}
+				else
+					return countOfPaths(obstacleGrid, i - 1, j, visited) + countOfPaths(obstacleGrid, i, j - 1, visited)
+							+ countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
+			}
+
+			else {
+				if (visited.contains("" + (i - 1) + "" + (j))) {
+					return countOfPaths(obstacleGrid, i, j - 1, visited);
+				} else if (visited.contains("" + (i) + "" + (j - 1)))
+					return countOfPaths(obstacleGrid, i - 1, j, visited);
+				else
+					return countOfPaths(obstacleGrid, i, j - 1, visited)
+							+ countOfPaths(obstacleGrid, i - 1, j, visited);
+			}
+
+		}
+
+		else if (i > 0) {
+			for (int k = i; k >= 0; k--)
+				if (obstacleGrid[k][j] == 1)
+					return 0;
+			return 1;
+		} else {
+			for (int k = j; k >= 0; k--)
+				if (obstacleGrid[i][k] == 1)
+					return 0;
+			return 1;
+		}
+
+	}
+
+	public int uniquePaths(int m, int n) {
+
+		// accepted solution 3
+		if (m == 1 || n == 1)
+			return 1;
+		else if (m == 2)
+			return n;
+		else if (n == 2)
+			return m;
+
+		int[] values = new int[m];
+		Arrays.fill(values, 1);
+
+		for (int i = 1; i < n; i++) {
+			for (int j = 1; j < m; j++) {
+				values[j] = values[j] + values[j - 1];
+			}
+		}
+
+		return values[m - 1];
+
+//		// accepted solution 2
+//		if (m == 1 || n == 1)
+//			return 1;
+//		else if (m == 2)
+//			return n;
+//		else if (n == 2)
+//			return m;
+//
+//		int[][] matrix = new int[m + 1][n + 1];
+//		for (int i = 1; i < matrix[0].length; i++) {
+//			matrix[2][i] = i;
+//		}
+//
+//		for (int i = 1; i < matrix.length; i++) {
+//			matrix[i][2] = i;
+//		}
+//
+//		for (int i = 3; i < matrix.length; i++) {
+//			for (int j = 3; j < matrix[i].length; j++) {
+//				matrix[i][j] = matrix[i - 1][j] + matrix[i][j - 1];
+//			}
+//		}
+//
+//		return matrix[m][n];
+
+		// accepted solution 1
+//		if (m == 1 || n == 1)
+//			return 1;
+//		else if (m == 2)
+//			return n;
+//		else if (n == 2)
+//			return m;
+//		
+//		else
+//			return uniquePaths(m, n - 1) + uniquePaths(m - 1, n);
+	}
 
 	public List<List<Integer>> groupThePeople(int[] groupSizes) {
 		List<List<Integer>> result = new ArrayList<List<Integer>>();
@@ -44,7 +173,7 @@ public class Problems {
 						}
 
 					}
-					result.add(tmp);
+					// result.add(tmp);
 				}
 
 			}
