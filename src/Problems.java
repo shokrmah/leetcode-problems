@@ -52,11 +52,10 @@ public class Problems {
 				if (visited.contains("" + (i - 1) + "" + (j))) {
 					return countOfPaths(obstacleGrid, i, j - 1, visited)
 							+ countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
-				}
-				else if(visited.contains("" + (i) + "" + (j - 1))) {
-					return countOfPaths(obstacleGrid, i - 1, j, visited) + countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
-				}
-				else
+				} else if (visited.contains("" + (i) + "" + (j - 1))) {
+					return countOfPaths(obstacleGrid, i - 1, j, visited)
+							+ countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
+				} else
 					return countOfPaths(obstacleGrid, i - 1, j, visited) + countOfPaths(obstacleGrid, i, j - 1, visited)
 							+ countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
 			}
@@ -1590,4 +1589,87 @@ public class Problems {
 		return result;
 	}
 
+	public int countServers(int[][] grid) {
+		int countOfVisited = 0;
+
+		Map<Integer, Integer> rows = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> columns = new HashMap<Integer, Integer>();
+		HashSet<Integer> alreadyRemoved = new HashSet<Integer>();
+
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++)
+				if (grid[i][j] == 1) {
+					if (rows.containsKey(i))
+						rows.put(i, rows.get(i) + 1);
+					else
+						rows.put(i, 1);
+
+					if (columns.containsKey(j))
+						columns.put(j, columns.get(j) + 1);
+					else
+						columns.put(j, 1);
+
+				}
+		}
+
+		Iterator hmIterator = rows.entrySet().iterator();
+		while (hmIterator.hasNext()) {
+			Map.Entry mapElement = (Map.Entry) hmIterator.next();
+			int count = (int) mapElement.getValue();
+			if (count > 1) {
+				countOfVisited += count;
+				if (columns.containsKey((int) mapElement.getKey())) {
+					countOfVisited -= 1;
+					System.out.println((int) mapElement.getKey());
+					alreadyRemoved.add((int) mapElement.getKey());
+				}
+
+			}
+
+		}
+
+		Iterator ColumnIterator = columns.entrySet().iterator();
+		while (ColumnIterator.hasNext()) {
+			Map.Entry element = (Map.Entry) ColumnIterator.next();
+			int count = (int) element.getValue();
+			if (count > 1) {
+				countOfVisited += count;
+
+				if (rows.containsKey((int) element.getKey()) && !alreadyRemoved.contains((int) element.getKey())) {
+					System.out.println((int) element.getKey());
+					countOfVisited -= 1;
+				}
+
+			}
+
+		}
+
+		return countOfVisited;
+	}
+
+	public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+
+		boolean[] visited = new boolean[rooms.size()];
+		visited[0] = true;
+		Stack<Integer> myStack = new Stack<Integer>();
+		myStack.push(0);
+
+		while (!myStack.isEmpty()) {
+			int room = myStack.pop();
+
+			for (int i = 0; i < rooms.get(room).size(); i++) {
+				if (!visited[rooms.get(room).get(i)]) {
+					visited[rooms.get(room).get(i)] = true;
+					myStack.push(rooms.get(room).get(i));
+				}
+			}
+
+		}
+
+		for (int i = 0; i < visited.length; i++)
+			if (!visited[i])
+				return false;
+
+		return true;
+	}
 }
