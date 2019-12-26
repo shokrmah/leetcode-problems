@@ -8,21 +8,16 @@ public class MainProgram {
 
 		Problems p = new Problems();
 
+//		TreeNode tn = new TreeNode(1);
+//		tn.left = new TreeNode(0);
+//		tn.right = new TreeNode(1);
+//		tn.left.left = new TreeNode(0);
+//		tn.left.right = new TreeNode(1);
+//		tn.right.left = new TreeNode(0);
+//		tn.right.right = new TreeNode(1);
 
+		System.out.println(p.findTheDifference("abcd","abcde"));
 
-		TreeNode tn = new TreeNode(1);
-		//tn.left = new TreeNode(1);
-		tn.right = new TreeNode(2);
-//		tn.left.left = new TreeNode(9);
-		//tn.left.right = new TreeNode(2);
-		tn.right.left = new TreeNode(3);
-//		System.out.println(p.rangeSumBST(tn,7,15));
-//[0,0,0],[0,1,0],[0,0,0]
-		
-		
-		System.out.println(p.postorderTraversal(tn));
-		
-		
 	}
 
 }

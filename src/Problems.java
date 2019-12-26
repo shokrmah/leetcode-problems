@@ -15,7 +15,131 @@ import java.util.Stack;
 
 public class Problems {
 
+	public char findTheDifference(String s, String t) {
 
+		char result = 0;
+		for (char c : s.toCharArray()) {
+			result = (char) (result ^ c);
+		}
+		for (char c : t.toCharArray()) {
+			result = (char) (result ^ c);
+		}
+		return ' ';
+
+	}
+
+	public int missingNumber(int[] nums) {
+		if (nums.length == 0)
+			return 0;
+
+		int summationOfArray = 0;
+		int sumAll = 0;
+		for (int i = 0; i <= nums.length; i++) {
+			sumAll = sumAll + i;
+			if (i < nums.length)
+				summationOfArray = summationOfArray + nums[i];
+		}
+
+		return sumAll - summationOfArray;
+	}
+
+	public int singleNumber(int[] nums) {
+
+		int result = nums[0];
+		for (int i = 1; i < nums.length; i++) {
+			result = result ^ nums[i];
+		}
+
+		return result;
+	}
+
+	public int lastStoneWeight(int[] stones) {
+		Arrays.sort(stones);
+
+		for (int i = stones.length - 1; i > 0; i--) {
+			stones[i - 1] = stones[i] - stones[i - 1];
+			reArrangeArray(stones, i - 1);
+		}
+
+		return stones[0];
+	}
+
+	public void reArrangeArray(int[] stones, int index) {
+		int tmp = 0;
+		for (int i = index; i > 0; i--) {
+			if (stones[i] < stones[i - 1]) {
+				// swap
+				tmp = stones[i];
+				stones[i] = stones[i - 1];
+				stones[i - 1] = tmp;
+			} else
+				return;
+		}
+	}
+
+	public int sumRootToLeaf(TreeNode root) {
+
+		if (root == null)
+			return 0;
+
+		StringBuilder binaryBuilder = new StringBuilder();
+		List<Integer> values = new ArrayList<Integer>();
+
+		calcBinarySumamtion(root, values, binaryBuilder);
+
+		int sum = 0;
+		for (Integer value : values) {
+			sum = sum + value;
+		}
+		return sum;
+	}
+
+	public void calcBinarySumamtion(TreeNode node, List<Integer> values, StringBuilder binaryBuilder) {
+
+		binaryBuilder.append(node.val);
+		if (node.left == null && node.right == null) {
+			// binaryBuilder.append(node.val);
+			System.out.println(binaryBuilder.toString());
+			values.add(Integer.parseInt(binaryBuilder.toString(), 2));
+			binaryBuilder.deleteCharAt(binaryBuilder.length() - 1);
+			return;
+		}
+
+		if (node.left != null) {
+			calcBinarySumamtion(node.left, values, binaryBuilder);
+		}
+
+		if (node.right != null) {
+			calcBinarySumamtion(node.right, values, binaryBuilder);
+		}
+		binaryBuilder.deleteCharAt(binaryBuilder.length() - 1);
+	}
+
+	public int[][] transpose(int[][] A) {
+
+		int[][] transposedA = new int[A[0].length][A.length];
+		for (int i = 0; i < transposedA.length; i++) {
+			for (int j = 0; j < transposedA[i].length; j++) {
+				transposedA[i][j] = A[j][i];
+			}
+		}
+
+		return transposedA;
+	}
+
+	public int findComplement(int num) {
+		String binary = Integer.toBinaryString(num);
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < binary.length(); i++) {
+			if (binary.charAt(i) == '0')
+				sb.append(1);
+			else
+				sb.append(0);
+		}
+
+		return Integer.parseInt(sb.toString(), 2);
+	}
 
 	public List<Integer> postorderTraversal(TreeNode root) {
 		List<Integer> values = new ArrayList<Integer>();
