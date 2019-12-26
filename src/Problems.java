@@ -1,7 +1,6 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,13 +15,82 @@ import java.util.Stack;
 
 public class Problems {
 
-	public List<Integer> inorderTraversal(TreeNode root) {
+
+
+	public List<Integer> postorderTraversal(TreeNode root) {
 		List<Integer> values = new ArrayList<Integer>();
-		getTreeValues(root, values);
+
+		if (root == null)
+			return values;
+		// using recursion
+		// postTraversalTree(root, values);
+		// solve it using dfs
+		Stack<TreeNode> dfs = new Stack<TreeNode>();
+		dfs.add(root);
+		Set<TreeNode> visited = new HashSet<TreeNode>();
+
+		TreeNode top = null;
+		while (!dfs.isEmpty()) {
+			while (dfs.peek().left != null && !visited.contains(dfs.peek().left)) {
+				dfs.add(dfs.peek().left);
+			}
+
+			if (dfs.peek().right != null && !visited.contains(dfs.peek().right)) {
+				dfs.add(dfs.peek().right);
+				continue;
+			}
+
+			if (dfs.peek().left == null && dfs.peek().right == null) {
+				top = dfs.pop();
+				visited.add(top);
+				values.add(top.val);
+			}
+
+		}
+
 		return values;
 	}
 
+	public void postTraversalTree(TreeNode root, List<Integer> values) {
+		if (root == null)
+			return;
+		postTraversalTree(root.left, values);
 
+		postTraversalTree(root.right, values);
+		values.add(root.val);
+	}
+
+	public List<Integer> inorderTraversal(TreeNode root) {
+
+		List<Integer> values = new ArrayList<Integer>();
+
+		if (root == null)
+			return values;
+
+		// using recursion
+		// getTreeValues(root, values);
+		// solve it using DFS
+		Stack<TreeNode> dfs = new Stack<TreeNode>();
+		dfs.add(root);
+		TreeNode top = null;
+		while (!dfs.isEmpty()) {
+
+			while (dfs.peek().left != null)
+				dfs.add(dfs.peek().left);
+
+			top = dfs.pop();
+			values.add(top.val);
+			while (top.right == null && !dfs.isEmpty()) {
+				top = dfs.pop();
+				values.add(top.val);
+			}
+			if (top.right != null)
+				dfs.add(top.right);
+
+		}
+
+		return values;
+	}
 
 	public int minDiffInBST(TreeNode root) {
 
