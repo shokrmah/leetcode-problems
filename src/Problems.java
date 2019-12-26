@@ -1,6 +1,7 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,75 +16,70 @@ import java.util.Stack;
 
 public class Problems {
 
+	public List<Integer> inorderTraversal(TreeNode root) {
+		List<Integer> values = new ArrayList<Integer>();
+		getTreeValues(root, values);
+		return values;
+	}
+
+
+
+	public int minDiffInBST(TreeNode root) {
+
+		List<Integer> values = new ArrayList<Integer>();
+
+		getTreeValues(root, values);
+
+		int minDiff = Integer.MAX_VALUE;
+		for (int i = 1; i < values.size(); i++) {
+			if (values.get(i) - values.get(i - 1) < minDiff)
+				minDiff = values.get(i) - values.get(i - 1);
+		}
+		return minDiff;
+	}
+
+	public void getTreeValues(TreeNode root, List<Integer> values) {
+		if (root == null)
+			return;
+		getTreeValues(root.left, values);
+		values.add(root.val);
+		getTreeValues(root.right, values);
+	}
+
 	public int uniquePathsWithObstacles(int[][] obstacleGrid) {
 		if (obstacleGrid.length == 0 && obstacleGrid[0].length == 0)
 			return 1;
 		if (obstacleGrid[0][0] == 1 || obstacleGrid[obstacleGrid.length - 1][obstacleGrid[0].length - 1] == 1)
 			return 0;
 
-//		List<Integer> iObstaclesIndexes = new ArrayList<Integer>();
-//		List<Integer> jObstaclesIndexes = new ArrayList<Integer>();
-//
-//		for (int i = 0; i < obstacleGrid.length; i++) {
-//			for (int j = 0; j < obstacleGrid[i].length; j++) {
-//				if (obstacleGrid[i][j] == 1) {
-//					iObstaclesIndexes.add(i);
-//					iObstaclesIndexes.add(j);
-//				}
-//
-//			}
-//		}
+		obstacleGrid[0][0] = 1;
+		long[][] mem = new long[obstacleGrid.length][obstacleGrid[0].length];
 
-		Set<String> visited = new HashSet<String>();
-
-		return countOfPaths(obstacleGrid, obstacleGrid.length - 1, obstacleGrid[0].length - 1, visited);
-	}
-
-	public int countOfPaths(int[][] obstacleGrid, int i, int j, Set<String> visited) {
-		if (obstacleGrid[i][j] == 1)
-			return 0;
-		else if (i == 0 && j == 0)
-			return 1;
-
-		if (i > 0 && j > 0) {
-			if (obstacleGrid[i - 1][j] == 0 && obstacleGrid[i][j - 1] == 0 && obstacleGrid[i - 1][j - 1] == 0) {
-				visited.add("" + (i - 1) + "" + (j - 1));
-
-				if (visited.contains("" + (i - 1) + "" + (j))) {
-					return countOfPaths(obstacleGrid, i, j - 1, visited)
-							+ countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
-				} else if (visited.contains("" + (i) + "" + (j - 1))) {
-					return countOfPaths(obstacleGrid, i - 1, j, visited)
-							+ countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
-				} else
-					return countOfPaths(obstacleGrid, i - 1, j, visited) + countOfPaths(obstacleGrid, i, j - 1, visited)
-							+ countOfPaths(obstacleGrid, i - 1, j - 1, visited) * 2;
+		for (int i = 0; i < mem.length; i++) {
+			for (int j = 0; j < mem[i].length; j++) {
+				mem[i][j] = obstacleGrid[i][j];
 			}
-
-			else {
-				if (visited.contains("" + (i - 1) + "" + (j))) {
-					return countOfPaths(obstacleGrid, i, j - 1, visited);
-				} else if (visited.contains("" + (i) + "" + (j - 1)))
-					return countOfPaths(obstacleGrid, i - 1, j, visited);
-				else
-					return countOfPaths(obstacleGrid, i, j - 1, visited)
-							+ countOfPaths(obstacleGrid, i - 1, j, visited);
-			}
-
 		}
 
-		else if (i > 0) {
-			for (int k = i; k >= 0; k--)
-				if (obstacleGrid[k][j] == 1)
-					return 0;
-			return 1;
-		} else {
-			for (int k = j; k >= 0; k--)
-				if (obstacleGrid[i][k] == 1)
-					return 0;
-			return 1;
+		for (int i = 1; i < mem.length; i++) {
+			mem[i][0] = (mem[i][0] == 0 && mem[i - 1][0] == 1) ? 1 : 0;
 		}
 
+		for (int i = 1; i < mem[0].length; i++) {
+			mem[0][i] = (mem[0][i] == 0 && mem[0][i - 1] == 1) ? 1 : 0;
+		}
+
+		for (int i = 1; i < mem.length; i++) {
+			for (int j = 1; j < mem[i].length; j++) {
+				if (mem[i][j] == 0) {
+					mem[i][j] = mem[i - 1][j] + mem[i][j - 1];
+				} else {
+					mem[i][j] = 0;
+				}
+			}
+		}
+
+		return (int) mem[mem.length - 1][mem[0].length - 1];
 	}
 
 	public int uniquePaths(int m, int n) {
