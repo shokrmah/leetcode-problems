@@ -15,6 +15,32 @@ import java.util.Stack;
 
 public class Problems {
 
+	public int[] replaceElements(int[] arr) {
+		int maxValueToRight = Integer.MIN_VALUE;
+		int maxValueIndex = -1;
+		for (int i = 0; i < arr.length; i++) {
+			if (i == arr.length - 1) {
+				arr[i] = -1;
+				break;
+			}
+			if (i >= maxValueIndex) {
+				maxValueToRight = Integer.MIN_VALUE;
+				maxValueIndex = -1;
+				for (int j = i + 1; j < arr.length; j++) {
+					if (arr[j] >= maxValueToRight) {
+						maxValueToRight = arr[j];
+						maxValueIndex = j;
+					}
+
+				}
+			}
+
+			arr[i] = maxValueToRight;
+		}
+
+		return arr;
+	}
+
 	public TreeNode constructMaximumBinaryTree(int[] nums) {
 		return makeTree(nums, 0, nums.length);
 	}
