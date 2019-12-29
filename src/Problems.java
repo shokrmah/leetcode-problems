@@ -15,6 +15,302 @@ import java.util.Stack;
 
 public class Problems {
 
+	public TreeNode constructMaximumBinaryTree(int[] nums) {
+		return makeTree(nums, 0, nums.length);
+	}
+
+	public TreeNode makeTree(int[] nums, int startIndex, int endIndex) {
+		if (startIndex == endIndex)
+			return null;
+
+		int maxValIndex = Integer.MIN_VALUE;
+		for (int i = startIndex; i < endIndex; i++) {
+			if (nums[i] > maxValIndex)
+				maxValIndex = nums[i];
+		}
+		TreeNode root = new TreeNode(nums[maxValIndex]);
+		root.left = makeTree(nums, startIndex, maxValIndex);
+		root.right = makeTree(nums, maxValIndex + 1, endIndex);
+		return root;
+	}
+
+	public TreeNode bstToGst(TreeNode root) {
+		sumRightTree(root, 0);
+		return root;
+	}
+
+	public int sumRightTree(TreeNode root, int sum) {
+		if (root == null)
+			return sum;
+
+		int sumR = sumRightTree(root.right, sum);
+
+		root.val = sumR + root.val;
+		return sumRightTree(root.left, root.val);
+	}
+
+	public int deepestLeavesSum(TreeNode root) {
+
+		if (root == null)
+			return 0;
+		int[] levels = new int[10001];
+
+		sumMaxLevelLeaves(root, levels, 0);
+
+		for (int i = levels.length - 1; i >= 0; i--) {
+			if (levels[i] > 0)
+				return levels[i];
+		}
+
+		return 0;
+	}
+
+	public void sumMaxLevelLeaves(TreeNode root, int[] levels, int level) {
+		if (root.left == null && root.right == null) {
+			levels[level] = levels[level] + root.val;
+			return;
+		}
+		if (root.left != null)
+			sumMaxLevelLeaves(root.left, levels, level + 1);
+
+		if (root.right != null)
+			sumMaxLevelLeaves(root.right, levels, level + 1);
+
+	}
+
+	public List<Integer> findDuplicates(int[] nums) {
+		int[] availableNums = new int[nums.length + 1];
+		List<Integer> result = new ArrayList<Integer>();
+		for (int i = 0; i < nums.length; i++) {
+			availableNums[nums[i]]++;
+		}
+
+		for (int i = 1; i < availableNums.length; i++) {
+			if (availableNums[i] > 1)
+				result.add(i);
+		}
+
+		return result;
+	}
+
+	public List<Integer> findDisappearedNumbers(int[] nums) {
+		boolean[] availableNums = new boolean[nums.length + 1];
+		List<Integer> result = new ArrayList<Integer>();
+		for (int i = 0; i < nums.length; i++) {
+			availableNums[nums[i]] = true;
+		}
+
+		for (int i = 1; i < availableNums.length; i++) {
+			if (!availableNums[i])
+				result.add(i);
+		}
+
+		return result;
+	}
+
+	public boolean canWinNim(int n) {
+		if (n % 4 == 0)
+			return false;
+		return true;
+	}
+
+	public int maxDistToClosest(int[] seats) {
+		int dist = 0;
+		int maxDistance = 1;
+		boolean isFirstOne = true;
+
+		for (int i = 0; i < seats.length; i++) {
+			if (seats[i] == 1) {
+				if (isFirstOne) {
+					isFirstOne = false;
+				} else {
+					if (dist % 2 == 0)
+						dist = dist / 2;
+					else
+						dist = (dist + 1) / 2;
+				}
+
+				if (dist > maxDistance)
+					maxDistance = dist;
+				dist = 0;
+			} else
+				dist++;
+		}
+
+		if (dist > maxDistance)
+			maxDistance = dist;
+
+		return maxDistance;
+	}
+
+	public int[] fairCandySwap(int[] A, int[] B) {
+		int sumA = 0;
+		int sumB = 0;
+		Set<Integer> bItems = new HashSet<Integer>();
+		for (int i = 0; i < A.length; i++) {
+			sumA = sumA + A[i];
+		}
+		for (int i = 0; i < B.length; i++) {
+			sumB = sumB + B[i];
+			bItems.add(B[i]);
+		}
+		int diff = (sumB - sumA) / 2;
+
+		for (int x : A) {
+			if (bItems.contains(x + diff))
+				return new int[] { x, x + diff };
+		}
+
+		return new int[] {};
+	}
+
+	public int singleNumber2(int[] nums) {
+		Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+		for (int i = 0; i < nums.length; i++) {
+			counts.putIfAbsent(nums[i], 0);
+			counts.put(nums[i], counts.get(i) + 1);
+			if (counts.get(i) == 3)
+				counts.remove(nums[i]);
+		}
+
+		Iterator<Map.Entry<Integer, Integer>> itr = counts.entrySet().iterator();
+		return itr.next().getKey();
+
+	}
+
+	public int search(int[] nums, int target) {
+		return searchBinary(nums, target, 0, nums.length - 1, nums.length / 2);
+	}
+
+	public int searchBinary(int[] nums, int target, int i, int j, int pivot) {
+		if (j < i)
+			return -1;
+		else if (nums[pivot] == target)
+			return pivot;
+		else if (nums[pivot] > target)
+			return searchBinary(nums, target, i, pivot - 1, (i + i) / 2);
+		else
+			return searchBinary(nums, target, pivot + 1, j, (j + i) / 2);
+
+	}
+
+	public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+		if (l1 == null)
+			return l2;
+		if (l2 == null)
+			return l1;
+
+		ListNode resultNode = null;
+		if (l1.val <= l2.val) {
+			resultNode = new ListNode(l1.val);
+			l1 = l1.next;
+		}
+
+		else {
+			resultNode = new ListNode(l2.val);
+			l2 = l2.next;
+		}
+
+		ListNode l3Iterator = resultNode;
+
+		while (l1 != null && l2 != null) {
+			if (l1.val <= l2.val) {
+				l3Iterator.next = new ListNode(l1.val);
+				l3Iterator = l3Iterator.next;
+				l1 = l1.next;
+			} else {
+				l3Iterator.next = new ListNode(l2.val);
+				l3Iterator = l3Iterator.next;
+				l2 = l2.next;
+			}
+		}
+
+		while (l1 != null) {
+			l3Iterator.next = new ListNode(l1.val);
+			l3Iterator = l3Iterator.next;
+			l1 = l1.next;
+		}
+
+		while (l2 != null) {
+			l3Iterator.next = new ListNode(l2.val);
+			l3Iterator = l3Iterator.next;
+			l2 = l2.next;
+		}
+
+		return resultNode;
+	}
+
+	public int largestSumAfterKNegations(int[] A, int K) {
+		Arrays.sort(A);
+		int sum = 0;
+		int index = -1;
+		for (int i = 0; i < A.length; i++) {
+			if (K == 0)
+				break;
+			if (A[i] <= 0) {
+				A[i] = A[i] * -1;
+				K--;
+			} else {
+				index = i;
+				break;
+			}
+
+		}
+
+		if (K > 0 && K % 2 != 0)
+			if (index == 0) {
+				A[index] = A[index] * -1;
+			} else {
+				if (index + 1 < A.length) {
+					int min = Math.min(Math.min(A[index - 1], A[index]), A[index + 1]);
+					if (A[index - 1] == min)
+						A[index - 1] = A[index - 1] * -1;
+					else if (A[index] == min)
+						A[index] = A[index] * -1;
+					else
+						A[index + 1] = A[index + 1] * -1;
+				} else {
+					if (A[index] <= A[index - 1])
+						A[index] = A[index] * -1;
+					else
+						A[index - 1] = A[index - 1] * -1;
+				}
+
+			}
+
+		for (int i : A) {
+			sum = sum + i;
+		}
+		return sum;
+	}
+
+	public boolean lemonadeChange(int[] bills) {
+		int noOfFives = 0;
+		int noOfTens = 0;
+
+		for (int i = 0; i < bills.length; i++) {
+			if (bills[i] == 5)
+				noOfFives++;
+			else if (bills[i] == 10) {
+				noOfTens++;
+				noOfFives--;
+			} else {
+				if (noOfTens > 0) {
+					noOfTens--;
+					noOfFives--;
+
+				} else {
+					noOfFives = noOfFives - 3;
+				}
+			}
+
+			if (noOfFives < 0)
+				return false;
+		}
+
+		return true;
+	}
+
 	public char findTheDifference(String s, String t) {
 
 		char result = 0;
