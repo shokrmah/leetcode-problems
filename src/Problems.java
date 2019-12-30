@@ -15,6 +15,239 @@ import java.util.Stack;
 
 public class Problems {
 
+	public boolean isSymmetric(TreeNode root) {
+		return return checkSym(root, root);
+	}
+
+	public boolean checkSym(TreeNode tLeft, TreeNode tRight) {
+		if(tLeft == null && tRight == null)
+			return true;
+		if(tLeft == null || tRight == null)
+			return false;
+		return (tLeft.val == tRight.val) && checkSym(tLeft.right, tRight.left) && checkSym(tLeft.left, tRight.right);
+	}
+
+	public int minDepth(TreeNode root) {
+		if (root == null)
+			return 0;
+
+		Queue<TreeNode> nodes = new LinkedList<TreeNode>();
+
+		nodes.add(root);
+
+		TreeNode node = null;
+
+		int depth = 0;
+		int count = 0;
+		while (!nodes.isEmpty()) {
+			count = nodes.size();
+			for (int i = 0; i < count; i++) {
+				node = nodes.poll();
+				if (node.left == null && node.right == null)
+					return depth;
+				if (node.left != null)
+					nodes.add(node.left);
+				if (node.right != null)
+					nodes.add(node.right);
+			}
+			depth++;
+		}
+		return depth;
+
+	}
+
+	public List<List<Integer>> levelOrderBottom(TreeNode root) {
+
+		List<List<Integer>> results = new ArrayList<List<Integer>>();
+
+		if (root == null)
+			return results;
+
+		Queue<TreeNode> nodes = new LinkedList<TreeNode>();
+
+		nodes.add(root);
+
+		TreeNode node = null;
+
+		List<Integer> level;
+		int count = 0;
+		while (!nodes.isEmpty()) {
+			count = nodes.size();
+			level = new ArrayList<Integer>();
+			for (int i = 0; i < count; i++) {
+
+				node = nodes.poll();
+				if (node.left != null)
+					nodes.add(node.left);
+
+				if (node.right != null)
+					nodes.add(node.right);
+
+				level.add(node.val);
+
+			}
+			results.add(0, level);
+
+		}
+
+		return results;
+
+	}
+
+	public boolean isCousins(TreeNode root, int x, int y) {
+
+		if (root.val == x || root.val == y)
+			return false;
+
+		Queue<TreeNode> nodes = new LinkedList<TreeNode>();
+
+		nodes.add(root);
+
+		TreeNode node = null;
+		int nodeXLevel = -1;
+		int nodeYLevel = -1;
+		TreeNode xParent = null;
+		TreeNode yParent = null;
+
+		int level = 0;
+		int count = 0;
+
+		while (!nodes.isEmpty()) {
+			count = nodes.size();
+			for (int i = 0; i < count; i++) {
+
+				node = nodes.poll();
+
+				if (node.left != null) {
+					if (node.left.val == x) {
+						nodeXLevel = level;
+						xParent = node;
+					}
+
+					if (node.left.val == y) {
+						nodeYLevel = level;
+						yParent = node;
+					}
+					nodes.add(node.left);
+				}
+
+				if (node.right != null) {
+					if (node.right.val == x) {
+						nodeXLevel = level;
+						xParent = node;
+					}
+
+					if (node.right.val == y) {
+						nodeYLevel = level;
+						yParent = node;
+					}
+					nodes.add(node.right);
+				}
+
+				if (nodeXLevel != -1 && nodeYLevel != -1) {
+					if (nodeXLevel == nodeYLevel && xParent != yParent)
+						return true;
+					else
+						return false;
+				}
+
+			}
+
+			level++;
+		}
+
+		return false;
+	}
+
+	public boolean canPlaceFlowers(int[] flowerbed, int n) {
+		if (n == 0)
+			return true;
+
+		if (n == 1 && flowerbed.length == 1 && flowerbed[0] == 0)
+			return true;
+
+		if (flowerbed.length > 1 && flowerbed[0] == 0 && flowerbed[1] == 0) {
+			flowerbed[0] = 1;
+			n--;
+			if (n == 0)
+				return true;
+		}
+
+		for (int i = 1; i < flowerbed.length - 1; i++) {
+
+			if (flowerbed[i - 1] == 0 && flowerbed[i] == 0 && flowerbed[i + 1] == 0) {
+				n--;
+				if (n == 0)
+					return true;
+				flowerbed[i] = 1;
+			}
+
+		}
+
+		if (flowerbed.length > 1 && flowerbed[flowerbed.length - 1] == 0 && flowerbed[flowerbed.length - 2] == 0) {
+			n--;
+			if (n == 0)
+				return true;
+		}
+
+		return false;
+	}
+
+	public int lengthOfLastWord(String s) {
+		if (s.trim().length() == 0)
+			return 0;
+		String[] words = s.split(" ");
+		if (words.length > 0) {
+			return words[words.length - 1].length();
+		}
+
+		return 0;
+	}
+
+	public boolean isPerfectSquare(int num) {
+		double b = Math.sqrt(num);
+		if (b == (int) b)
+			return true;
+
+		return false;
+	}
+
+	public boolean judgeSquareSum(int c) {
+		for (long a = 0; a * a <= c; a++) {
+			double b = Math.sqrt(c - a * a);
+			if (b == (int) b)
+				return true;
+		}
+		return false;
+
+	}
+
+	public int mySqrt(int x) {
+		if (x == 1)
+			return 1;
+		int sqrtMin = 0;
+		int sqrtMax = x;
+
+		long value = 0;
+		while (sqrtMin < sqrtMax) {
+			value = (sqrtMax + sqrtMin) / 2;
+			if (value * value == x)
+				return (int) value;
+			else if (value * value > x) {
+				if (sqrtMax == value)
+					return (int) value;
+				sqrtMax = (int) value;
+			} else {
+				if (sqrtMin == value)
+					return (int) value;
+				sqrtMin = (int) value;
+			}
+		}
+
+		return (int) value;
+
+	}
+
 	public int[] replaceElements(int[] arr) {
 		int maxValueToRight = Integer.MIN_VALUE;
 		int maxValueIndex = -1;
