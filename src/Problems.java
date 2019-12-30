@@ -15,6 +15,65 @@ import java.util.Stack;
 
 public class Problems {
 
+	public String[] findWords(String[] words) {
+		int[] characterRow = new int[26];
+		characterRow[0] = 1;
+		characterRow[1] = 2;
+		characterRow[2] = 2;
+		characterRow[3] = 1;
+		characterRow[4] = 0;
+		characterRow[5] = 1;
+		characterRow[6] = 1;
+		characterRow[7] = 1;
+		characterRow[8] = 0;
+		characterRow[9] = 1;
+		characterRow[10] = 1;
+		characterRow[11] = 1;
+		characterRow[12] = 2;
+		characterRow[13] = 2;
+		characterRow[14] = 0;
+		characterRow[15] = 0;
+		characterRow[16] = 0;
+		characterRow[17] = 0;
+		characterRow[18] = 1;
+		characterRow[19] = 0;
+		characterRow[20] = 0;
+		characterRow[21] = 2;
+		characterRow[22] = 0;
+		characterRow[23] = 2;
+		characterRow[24] = 0;
+		characterRow[25] = 2;
+		List<String> resultList = new ArrayList<String>();
+
+		int rowNum = -1;
+		boolean isAccepted = true;
+
+		for (int i = 0; i < words.length; i++) {
+			isAccepted = true;
+			if (words[i].length() > 0) {
+				rowNum = characterRow[Character.toLowerCase(words[i].charAt(0)) - 'a'];
+				for (int j = 1; j < words[i].length(); j++) {
+					if (rowNum != characterRow[Character.toLowerCase(words[i].charAt(j)) - 'a']) {
+						isAccepted = false;
+						break;
+					}
+				}
+			}
+
+			if (isAccepted)
+				resultList.add(words[i]);
+		}
+
+		String[] resultArr = new String[resultList.size()];
+		for (int i = 0; i < resultArr.length; i++) {
+			resultArr[i] = resultList.get(i);
+		}
+			
+		
+		return resultArr;
+
+	}
+
 	public int dominantIndex(int[] nums) {
 		if (nums.length == 1)
 			return 0;
@@ -30,7 +89,7 @@ public class Problems {
 
 		for (int i = 0; i < nums.length; i++) {
 			if (i != maxValueIndex) {
-				if(nums[i]* 2 > maxValue)
+				if (nums[i] * 2 > maxValue)
 					return -1;
 			}
 		}

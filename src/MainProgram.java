@@ -19,7 +19,7 @@ public class MainProgram {
 		//tn.right.right = new TreeNode(8);
 
 		// System.out.println(p.maxDistToClosest(new int[] { 1,0,0,0,0,0,1 }));
-		System.out.println(p.isCousins(tn, 5, 4));
+		System.out.println(p.findWords(new String[] {"Hello", "Alaska", "Dad", "Peace"}));
 	}
 
 }
