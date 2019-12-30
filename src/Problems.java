@@ -15,14 +15,54 @@ import java.util.Stack;
 
 public class Problems {
 
+	public int dominantIndex(int[] nums) {
+		if (nums.length == 1)
+			return 0;
+
+		int maxValue = Integer.MIN_VALUE;
+		int maxValueIndex = -1;
+		for (int i = 0; i < nums.length; i++) {
+			if (nums[i] > maxValue) {
+				maxValue = nums[i];
+				maxValueIndex = i;
+			}
+		}
+
+		for (int i = 0; i < nums.length; i++) {
+			if (i != maxValueIndex) {
+				if(nums[i]* 2 > maxValue)
+					return -1;
+			}
+		}
+
+		return maxValueIndex;
+	}
+
+	public int[] sumZero(int n) {
+		if (n <= 0)
+			return new int[] {};
+		if (n == 1)
+			return new int[] { 0 };
+
+		int[] result = new int[n];
+
+		for (int i = 0; i < result.length - 1; i = i + 2) {
+			result[i] = i + 1;
+			result[i + 1] = (i + 1) * -1;
+		}
+
+		return result;
+
+	}
+
 	public boolean isSymmetric(TreeNode root) {
-		return return checkSym(root, root);
+		return checkSym(root, root);
 	}
 
 	public boolean checkSym(TreeNode tLeft, TreeNode tRight) {
-		if(tLeft == null && tRight == null)
+		if (tLeft == null && tRight == null)
 			return true;
-		if(tLeft == null || tRight == null)
+		if (tLeft == null || tRight == null)
 			return false;
 		return (tLeft.val == tRight.val) && checkSym(tLeft.right, tRight.left) && checkSym(tLeft.left, tRight.right);
 	}
