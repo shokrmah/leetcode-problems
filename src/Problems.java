@@ -1,6 +1,8 @@
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,6 +16,121 @@ import java.util.Set;
 import java.util.Stack;
 
 public class Problems {
+
+	public ListNode reverseList(ListNode head) {
+		if (head == null)
+			return null;
+
+		Stack<ListNode> reverse = new Stack<ListNode>();
+		while (head != null) {
+			reverse.add(head);
+			head = head.next;
+		}
+
+		ListNode newHead = reverse.pop();
+		ListNode it = newHead;
+		while (!reverse.isEmpty()) {
+			it.next = reverse.pop();
+			it = it.next;
+			
+		}
+		
+		it.next = null;
+		
+		while (newHead != null) {
+			System.out.println(newHead.val);
+			newHead= newHead.next;
+		}
+		
+		return newHead;
+
+	}
+
+	public List<String> fizzBuzz(int n) {
+		if (n < 1)
+			return new ArrayList<String>();
+
+		List<String> result = new ArrayList<String>();
+
+		String toInsert = "";
+		for (int i = 1; i <= n; i++) {
+			toInsert = "";
+			if (i % 3 == 0)
+				toInsert = "Fizz";
+			if (i % 5 == 0)
+				toInsert += "Buzz";
+
+			if (toInsert.length() == 0)
+				toInsert = "" + i;
+
+			result.add(toInsert);
+		}
+
+		return result;
+	}
+
+	public int strStr(String haystack, String needle) {
+		if (needle.equals(""))
+			return 0;
+		if (needle.length() > haystack.length())
+			return -1;
+		int searchSize = needle.length();
+
+		for (int i = 0; i < haystack.length() - searchSize + 1; i++) {
+			if (haystack.substring(i, i + searchSize).equals(needle))
+				return i;
+		}
+
+		return -1;
+	}
+
+	public boolean isPalindrome(String s) {
+		if (s.length() == 0)
+			return true;
+		StringBuilder sb = new StringBuilder();
+		for (char c : s.toCharArray()) {
+			if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9'))
+				sb.append(c);
+			else if (c >= 'A' && c <= 'Z')
+				sb.append(Character.toLowerCase(c));
+		}
+
+		int i = 0;
+		int j = sb.length() - 1;
+		while (i < j) {
+			if (sb.charAt(i) != sb.charAt(j))
+				return false;
+			i++;
+			j--;
+		}
+
+		return true;
+	}
+
+	public List<String> topKFrequent(String[] words, int k) {
+		List<String> result = new ArrayList<String>(k);
+		if (words.length == 0)
+			return result;
+
+		Map<String, Integer> counts = new HashMap<String, Integer>();
+
+		for (int i = 0; i < words.length; i++) {
+			counts.putIfAbsent(words[i], 0);
+			counts.put(words[i], counts.get(words[i]) + 1);
+		}
+
+		List<String> wordsByCount = new ArrayList<String>(counts.keySet());
+
+		Collections.sort(wordsByCount,
+				(word1, word2) -> counts.get(word1).equals(counts.get(word2)) ? word1.compareTo(word2)
+						: counts.get(word2) - counts.get(word1));
+
+		for (int i = 0; i < k; i++) {
+			result.add(wordsByCount.get(i));
+		}
+
+		return result;
+	}
 
 	public String[] findWords(String[] words) {
 		int[] characterRow = new int[26];
@@ -68,8 +185,7 @@ public class Problems {
 		for (int i = 0; i < resultArr.length; i++) {
 			resultArr[i] = resultList.get(i);
 		}
-			
-		
+
 		return resultArr;
 
 	}

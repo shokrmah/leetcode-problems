@@ -19,7 +19,14 @@ public class MainProgram {
 		//tn.right.right = new TreeNode(8);
 
 		// System.out.println(p.maxDistToClosest(new int[] { 1,0,0,0,0,0,1 }));
-		System.out.println(p.findWords(new String[] {"Hello", "Alaska", "Dad", "Peace"}));
+		
+		ListNode n = new ListNode(1);
+		n.next = new ListNode(2);
+		n.next.next = new ListNode(3);
+		n.next.next.next = new ListNode(4);
+		n.next.next.next.next = new ListNode(5);
+		
+		System.out.println(p.reverseList(n));
 	}
 
 }
