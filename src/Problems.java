@@ -14,8 +14,51 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Problems {
+
+	public int firstUniqChar(String s) {
+		if (s.length() == 0)
+			return -1;
+		if (s.length() == 1)
+			return 0;
+
+		HashMap<Character, Integer> counts = new HashMap<Character, Integer>();
+		for (int i = 0; i < s.length(); i++) {
+			counts.putIfAbsent(s.charAt(i), 0);
+			counts.put(s.charAt(i), counts.get(s.charAt(i)) + 1);
+		}
+
+		for (int i = 0; i < s.length(); i++) {
+            if (counts.get(s.charAt(i)) == 1) 
+                return i;
+        }
+		return -1;
+	}
+
+	public int titleToNumber(String s) {
+		int result = 0;
+		int j = 0;
+		for (int i = s.length() - 1; i >= 0; i--) {
+			result = result + ((s.charAt(i) - 'A' + 1) * (int) Math.pow(26, j));
+			j++;
+		}
+		return result;
+	}
+
+	public int maxProfit(int[] prices) {
+		if (prices.length == 0 || prices.length == 1)
+			return 0;
+
+		int maxprofit = 0;
+		for (int i = 1; i < prices.length; i++) {
+			if (prices[i] > prices[i - 1])
+				maxprofit += prices[i] - prices[i - 1];
+		}
+		return maxprofit;
+	}
 
 	public ListNode reverseList(ListNode head) {
 		if (head == null)
@@ -32,16 +75,16 @@ public class Problems {
 		while (!reverse.isEmpty()) {
 			it.next = reverse.pop();
 			it = it.next;
-			
+
 		}
-		
+
 		it.next = null;
-		
+
 		while (newHead != null) {
 			System.out.println(newHead.val);
-			newHead= newHead.next;
+			newHead = newHead.next;
 		}
-		
+
 		return newHead;
 
 	}
