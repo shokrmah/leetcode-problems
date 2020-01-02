@@ -30,11 +30,11 @@ public class Problems {
 		
 		int count = 0;
 		for (int i = 2; i < prime.length; i++) {
-			if(!prime[i])
-				counts++;
+			if(prime[i])
+				count++;
 		}
 		
-		return counts;
+		return count;
 	}
 
 	public int reverse(int x) {
