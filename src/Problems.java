@@ -59,6 +59,150 @@ public class Problems {
 		}
 		return maxprofit;
 	}
+	
+	public int romanToInt(String s) {
+		Map<String, Integer> symbolsValues = new HashMap<String, Integer>();
+		symbolsValues.put("I", 1);
+		symbolsValues.put("V", 5);
+		symbolsValues.put("X", 10);
+		symbolsValues.put("L", 50);
+		symbolsValues.put("C", 100);
+		symbolsValues.put("D", 500);
+		symbolsValues.put("M", 1000);
+		symbolsValues.put("IV", 4);
+		symbolsValues.put("IX", 9);
+		symbolsValues.put("XL", 40);
+		symbolsValues.put("XC", 90);
+		symbolsValues.put("CD", 400);
+		symbolsValues.put("CM", 900);
+
+		int value = 0;
+		for (int i = 0; i < s.length(); i++) {
+			if (i + 1 < s.length()) {
+				String search = "" + s.charAt(i) + s.charAt(i + 1);
+				if (symbolsValues.containsKey(search)) {
+					value = value + symbolsValues.get(search);
+					i++;
+					continue;
+				}
+			}
+			value = value + symbolsValues.get("" + s.charAt(i));
+
+		}
+
+		return value;
+	}
+
+	public TreeNode sortedArrayToBST(int[] nums) {
+		if (nums.length == 0)
+			return null;
+		if (nums.length == 1)
+			return new TreeNode(nums[0]);
+
+		return createBST(nums, 0, nums.length - 1);
+
+	}
+
+	public TreeNode createBST(int[] nums, int leftIndex, int rightIndex) {
+		if (leftIndex > rightIndex) {
+			return null;
+		}
+
+		int midIndex = (leftIndex + rightIndex) / 2;
+		TreeNode node = new TreeNode(nums[midIndex]);
+
+		node.left = createBST(nums, leftIndex, midIndex - 1);
+
+		node.right = createBST(nums, midIndex + 1, rightIndex);
+
+		return node;
+
+	}
+
+	public boolean containsDuplicate(int[] nums) {
+		Set<Integer> isFound = new HashSet<Integer>();
+
+		for (int i = 0; i < nums.length; i++) {
+			if (isFound.contains(nums[i]))
+				return true;
+
+			isFound.add(nums[i]);
+		}
+
+		return false;
+
+	}
+
+	public boolean isAnagram(String s, String t) {
+		if (s.length() != t.length())
+			return false;
+
+		int[] counts = new int[26];
+		for (int i = 0; i < s.length(); i++) {
+			counts[s.charAt(i) - 'a']++;
+			counts[t.charAt(i) - 'a']--;
+		}
+
+		for (int i : counts) {
+			if (i != 0)
+				return false;
+		}
+
+		return true;
+
+	}
+
+	public int majorityElement(int[] nums) {
+
+		if (nums.length == 0)
+			return 0;
+
+		int major = nums[0];
+		int countOfMajor = 1;
+
+		for (int i = 1; i < nums.length; i++) {
+			if (nums[i] == major)
+				countOfMajor++;
+			else {
+				countOfMajor--;
+				if (countOfMajor == 0) {
+					major = nums[i];
+					countOfMajor = 1;
+				}
+
+			}
+		}
+
+		return major;
+	}
+
+	public void deleteNode(ListNode node) {
+		node.val = node.next.val;
+		node.next = node.next.next;
+	}
+
+	public void moveZeroes(int[] nums) {
+		if (nums.length == 0 || nums.length == 1)
+			return;
+
+		int i = 0;
+
+		int countOfZeros = 0;
+
+		for (int k = 0; k < nums.length; k++) {
+			if (nums[k] != 0) {
+				nums[i] = nums[k];
+				i++;
+			} else
+				countOfZeros++;
+		}
+
+		for (int k = nums.length - 1; k >= nums.length - countOfZeros; k--) {
+			nums[k] = 0;
+		}
+
+	}
+	
 
 	public ListNode reverseList(ListNode head) {
 		if (head == null)
