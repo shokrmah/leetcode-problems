@@ -16,6 +16,30 @@ import java.util.Stack;
 
 public class Problems {
 
+	public int rob(int[] nums) {
+		if (nums.length == 0) {
+			return 0;
+		}
+		
+		if (nums.length == 1) {
+			return nums[0];
+		}
+		
+		if (nums.length == 2) {
+			return Math.max(nums[0], nums[1]);
+		}
+
+		int values[] = new int[nums.length];
+		values[0] = nums[0];
+		values[1] = Math.max(nums[0], nums[1]);
+
+		for (int i = 2; i < nums.length; i++) {
+			values[i] = Math.max(nums[i] + values[i - 2], values[i - 1]);
+		}
+
+		return values[values.length - 1];
+	}
+
 	public boolean isPowerOfFour(int num) {
 		if (num < 1)
 			return false;
@@ -24,7 +48,6 @@ public class Problems {
 
 		return num == 1;
 	}
-	
 
 	public boolean isPowerOfTwo(int n) {
 		if (n < 1)
@@ -38,7 +61,7 @@ public class Problems {
 	public boolean isPowerOfThree(int n) {
 		if (n < 1)
 			return false;
-        
+
 		while (n % 3 == 0)
 			n = n / 3;
 
