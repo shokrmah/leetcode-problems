@@ -2,7 +2,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,10 +13,176 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 public class Problems {
+
+	public boolean isPowerOfFour(int num) {
+		if (num < 1)
+			return false;
+		while (num % 4 == 0)
+			num = num / 4;
+
+		return num == 1;
+	}
+	
+
+	public boolean isPowerOfTwo(int n) {
+		if (n < 1)
+			return false;
+		while (n % 2 == 0)
+			n = n / 2;
+
+		return n == 1;
+	}
+
+	public boolean isPowerOfThree(int n) {
+		if (n < 1)
+			return false;
+        
+		while (n % 3 == 0)
+			n = n / 3;
+
+		return n == 1;
+	}
+
+	public int getSum(int a, int b) {
+		while (b != 0) {
+			int carry = a & b;
+			a ^= b;
+			b = (int) carry << 1;
+		}
+		return a;
+
+	}
+
+	public int maxSubArray(int[] nums) {
+
+		int max_so_far = Integer.MIN_VALUE;
+		int max_ending_here = 0;
+
+		for (int i = 0; i < nums.length; i++) {
+			max_ending_here = max_ending_here + nums[i];
+			if (max_so_far < max_ending_here)
+				max_so_far = max_ending_here;
+			if (max_ending_here < 0)
+				max_ending_here = 0;
+		}
+
+		return max_so_far;
+	}
+
+	public int hammingWeight(int n) {
+		String binary = Integer.toBinaryString(n);
+		int countOfOnes = 0;
+
+		for (char c : binary.toCharArray()) {
+			if (c == '1')
+				countOfOnes++;
+		}
+
+		return countOfOnes;
+	}
+
+	public boolean isHappy(int n) {
+		if (n <= 0)
+			return false;
+		if (n == 1)
+			return true;
+
+		Set<Integer> checkRepeated = new HashSet<Integer>();
+
+		int newNumber = 0;
+		while (n != 1) {
+			newNumber = 0;
+			while (n > 0) {
+				newNumber = newNumber + (int) Math.pow(n % 10, 2);
+				n = n / 10;
+			}
+			if (newNumber == 1)
+				return true;
+
+			if (checkRepeated.contains(newNumber))
+				return false;
+
+			checkRepeated.add(newNumber);
+			n = newNumber;
+
+		}
+
+		return true;
+
+	}
+
+	public int maxProfit1(int[] prices) {
+
+		if (prices.length <= 1)
+			return 0;
+
+		int max_so_far = Integer.MIN_VALUE;
+		int max_ending_here = 0;
+
+		for (int i = 1; i < prices.length; i++) {
+			max_ending_here = max_ending_here + prices[i] - prices[i - 1];
+			if (max_so_far < max_ending_here)
+				max_so_far = max_ending_here;
+			if (max_ending_here < 0)
+				max_ending_here = 0;
+		}
+
+		if (max_so_far < 0)
+			return 0;
+
+		return max_so_far;
+	}
+
+	public List<List<Integer>> generate(int numRows) {
+
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		if (numRows <= 0)
+			return result;
+		List<Integer> tmp = new ArrayList<Integer>();
+		tmp.add(1);
+
+		result.add(tmp);
+		if (numRows == 1)
+			return result;
+
+		tmp = new ArrayList<Integer>();
+		tmp.add(1);
+		tmp.add(1);
+		result.add(tmp);
+		int j = 0;
+		int k = 1;
+
+		List<Integer> prev = new ArrayList<Integer>();
+
+		for (int i = 3; i <= numRows; i++) {
+			tmp = new ArrayList<Integer>();
+			j = 1;
+			tmp.add(1);
+			prev = result.get(i - 2);
+			while (j < (i / 2)) {
+				tmp.add(prev.get(j) + prev.get(j - 1));
+
+				j++;
+			}
+			if (i % 2 != 0) {
+				k = 2;
+				tmp.add((i / 2), prev.get(j - 1) + prev.get(j));
+				j++;
+			} else
+				k = 1;
+			while (j < i) {
+				tmp.add(tmp.get(j - k));
+				j++;
+				k = k + 2;
+			}
+
+			result.add(tmp);
+		}
+
+		return result;
+	}
 
 	public int firstUniqChar(String s) {
 		if (s.length() == 0)
@@ -32,9 +197,9 @@ public class Problems {
 		}
 
 		for (int i = 0; i < s.length(); i++) {
-            if (counts.get(s.charAt(i)) == 1) 
-                return i;
-        }
+			if (counts.get(s.charAt(i)) == 1)
+				return i;
+		}
 		return -1;
 	}
 
@@ -59,7 +224,7 @@ public class Problems {
 		}
 		return maxprofit;
 	}
-	
+
 	public int romanToInt(String s) {
 		Map<String, Integer> symbolsValues = new HashMap<String, Integer>();
 		symbolsValues.put("I", 1);
@@ -202,7 +367,6 @@ public class Problems {
 		}
 
 	}
-	
 
 	public ListNode reverseList(ListNode head) {
 		if (head == null)

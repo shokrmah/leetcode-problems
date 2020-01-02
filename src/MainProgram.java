@@ -1,5 +1,4 @@
-import java.util.Calendar;
-import java.util.Date;
+
 
 public class MainProgram {
 
@@ -26,7 +25,7 @@ public class MainProgram {
 		n.next.next.next = new ListNode(4);
 		n.next.next.next.next = new ListNode(5);
 
-		System.out.println(p.firstUniqChar("leetcode"));
+		System.out.println(p.maxProfit1(new int[] {7,1,5,3,6,4}));
 	}
 
 }
