@@ -1,5 +1,4 @@
 
-
 public class MainProgram {
 
 	public static void main(String[] args) {
@@ -20,12 +19,13 @@ public class MainProgram {
 		// System.out.println(p.maxDistToClosest(new int[] { 1,0,0,0,0,0,1 }));
 
 		ListNode n = new ListNode(1);
-		n.next = new ListNode(2);
-		n.next.next = new ListNode(3);
-		n.next.next.next = new ListNode(4);
-		n.next.next.next.next = new ListNode(5);
-
-		System.out.println(p.rob(new int[] {2,1,1,2}));
+		n.next = new ListNode(1);
+		//n.next.next = new ListNode(3);
+		//n.next.next.next = new ListNode(4);
+		//n.next.next.next.next = new ListNode(5);
+		//n.next.next.next.next.next = n.next.next;
+	
+		System.out.println(p.isPalindrome(n));
 	}
 
 }

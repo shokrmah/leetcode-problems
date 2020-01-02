@@ -16,15 +16,219 @@ import java.util.Stack;
 
 public class Problems {
 
+	public int countPrimes(int n) {
+		boolean prime[] = new boolean[n + 1];
+		Arrays.fill(prime, true);
+
+		for (int p = 2; p * p <= n; p++) {
+
+			if (prime[p] == true) {
+				for (int i = p * 2; i <= n; i += p)
+					prime[i] = false;
+			}
+		}
+		
+		int count = 0;
+		for (int i = 2; i < prime.length; i++) {
+			if(!prime[i])
+				counts++;
+		}
+		
+		return counts;
+	}
+
+	public int reverse(int x) {
+		int result = 0;
+		while (x != 0) {
+			int firstNum = x % 10;
+			x /= 10;
+			if (result > Integer.MAX_VALUE / 10 || (result == Integer.MAX_VALUE / 10 && firstNum > 7))
+				return 0;
+			if (result < Integer.MIN_VALUE / 10 || (result == Integer.MIN_VALUE / 10 && firstNum < -8))
+				return 0;
+			result = result * 10 + firstNum;
+		}
+		return result;
+	}
+
+	public String longestCommonPrefix(String[] strs) {
+		if (strs.length == 0)
+			return "";
+		if (strs.length == 1)
+			return strs[0];
+
+		int i = 0;
+		StringBuilder sb = new StringBuilder();
+		char c;
+		while (i >= 0) {
+			if (strs[0].length() > i) {
+				c = strs[0].charAt(i);
+			} else
+				return sb.toString();
+
+			for (int j = 1; j < strs.length; j++) {
+				if (strs[j].length() > i) {
+					if (strs[j].charAt(i) != c)
+						return sb.toString();
+				} else
+					return sb.toString();
+
+			}
+			sb.append(c);
+			i++;
+		}
+
+		return sb.toString();
+	}
+
+	public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+		if (headA == null || headB == null)
+			return null;
+
+		ListNode itA = headA;
+		ListNode itB = headB;
+		while (itA != itB) {
+			if (itA == null)
+				itA = headB;
+			else
+				itA = itA.next;
+			if (itB == null)
+				itB = headA;
+			else
+				itB = itB.next;
+		}
+
+		return itA;
+	}
+
+	public boolean isPalindrome(ListNode head) {
+		if (head == null)
+			return true;
+		List<Integer> myList = new ArrayList<Integer>();
+
+		while (head != null) {
+			myList.add(head.val);
+			head = head.next;
+		}
+
+		int i = 0;
+		int j = myList.size() - 1;
+		while (i < j) {
+			if (!myList.get(i).equals(myList.get(j)))
+				return false;
+			i++;
+			j--;
+		}
+
+		return true;
+
+	}
+
+	public void merge(int[] nums1, int m, int[] nums2, int n) {
+		int i = m - 1;
+		int j = n - 1;
+		int k = m + n - 1;
+		while (i >= 0 && j >= 0) {
+			if (nums1[i] >= nums2[j]) {
+				nums1[k] = nums1[i];
+				i--;
+			} else {
+				nums1[k] = nums2[j];
+				j--;
+			}
+
+			k--;
+		}
+
+		while (j >= 0) {
+			nums1[k] = nums2[j];
+			j--;
+			k--;
+		}
+
+		while (i >= 0) {
+			nums1[k] = nums1[i];
+			i--;
+			k--;
+		}
+
+	}
+
+	public int trailingZeroes(int n) {
+		if (n < 5)
+			return 0;
+
+		long count = 0;
+		long divider = 5;
+		while (n >= divider) {
+			count = count + (n / divider);
+			divider = divider * 5;
+		}
+		return (int) count;
+	}
+
+	public long factorial(int n) {
+
+		if (n <= 2)
+			return n;
+
+		return n * factorial(n - 1);
+
+	}
+
+	public boolean isValid(String s) {
+
+		if (s.length() == 0)
+			return true;
+		if (s.length() % 2 != 0)
+			return false;
+
+		Stack<Character> myStack = new Stack<Character>();
+		for (char c : s.toCharArray()) {
+			if (c == '(' || c == '{' || c == '[')
+				myStack.push(c);
+			else {
+				if (!myStack.isEmpty()) {
+					char c2 = myStack.pop();
+					if (!((c2 == '(' && c == ')') || (c2 == '[' && c == ']') || (c2 == '{' && c == '}')))
+						return false;
+				} else
+					return false;
+			}
+		}
+		if (!myStack.isEmpty())
+			return false;
+		return true;
+	}
+
+	public boolean hasCycle(ListNode head) {
+
+		if (head == null || head.next == null)
+			return false;
+
+		ListNode faster = head.next;
+		ListNode slower = head;
+		while (faster != null) {
+			if (slower == faster)
+				return true;
+			slower = slower.next;
+			if (faster.next == null)
+				return false;
+			faster = faster.next.next;
+		}
+
+		return false;
+	}
+
 	public int rob(int[] nums) {
 		if (nums.length == 0) {
 			return 0;
 		}
-		
+
 		if (nums.length == 1) {
 			return nums[0];
 		}
-		
+
 		if (nums.length == 2) {
 			return Math.max(nums[0], nums[1]);
 		}
