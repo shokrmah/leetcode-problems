@@ -10,11 +10,374 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
 public class Problems {
+
+	public int findBottomLeftValue(TreeNode root) {
+		if (root == null)
+			return -1;
+
+		Queue<TreeNode> q = new LinkedList<TreeNode>();
+		q.add(root);
+		int mostLeftVal = 0;
+		int size = 0;
+		TreeNode tn = null;
+		while (!q.isEmpty()) {
+			size = q.size();
+			mostLeftVal = q.peek().val;
+			for (int i = 0; i < size; i++) {
+				tn = q.poll();
+				if(tn.left != null)
+					q.add(tn.left);
+				if(tn.right != null)
+					q.add(tn.right);
+			}
+		}
+		
+		return mostLeftVal;
+	}
+
+	public int maxNumberOfBalloons(String text) {
+		int[] counts = new int[26];
+		for (int i = 0; i < text.length(); i++) {
+			counts[text.charAt(i) - 'a']++;
+		}
+		int countOfBallons = 0;
+		// balloon
+		counts['l' - 'a'] = counts['l' - 'a'] / 2;
+		counts['o' - 'a'] = counts['o' - 'a'] / 2;
+
+		countOfBallons = Math.min(Math.min(Math.min(Math.min(counts['a' - 'a'], counts['b' - 'a']), counts['l' - 'a']),
+				counts['o' - 'a']), counts['n' - 'a']);
+
+		return countOfBallons;
+	}
+
+	public String[] uncommonFromSentences(String A, String B) {
+		Map<String, Integer> counts = new HashMap<String, Integer>();
+		String[] arr = A.split(" ");
+		String[] arr2 = B.split(" ");
+
+		int i = 0;
+		int length = Math.min(arr.length, arr2.length);
+
+		for (; i < length; i++) {
+			counts.put(arr[i], counts.getOrDefault(arr[i], 0) + 1);
+			counts.put(arr2[i], counts.getOrDefault(arr2[i], 0) + 1);
+		}
+
+		if (length == arr.length) {
+			for (; i < arr2.length; i++) {
+				counts.put(arr2[i], counts.getOrDefault(arr2[i], 0) + 1);
+
+			}
+		} else {
+			for (; i < arr.length; i++) {
+				counts.put(arr[i], counts.getOrDefault(arr[i], 0) + 1);
+			}
+		}
+
+		List<String> listResult = new ArrayList<String>();
+		for (Map.Entry<String, Integer> item : counts.entrySet()) {
+			if (item.getValue() == 1) {
+				listResult.add(item.getKey());
+			}
+
+		}
+		String[] result = new String[listResult.size()];
+
+		for (int j = 0; j < result.length; j++) {
+			result[j] = listResult.get(j);
+		}
+
+		return result;
+	}
+
+	public int maxArea(int[] height) {
+		if (height.length < 2)
+			return 0;
+
+		int i = 0;
+		int j = height.length - 1;
+
+		int maxArea = 0;
+		while (i < j) {
+			maxArea = Math.max(Math.min(height[i], height[j]) * (j - i), maxArea);
+			if (height[i] < height[j])
+				i++;
+			else
+				j--;
+		}
+
+		return maxArea;
+
+	}
+
+	public int findKthLargest(int[] nums, int k) {
+		if (nums.length == 0)
+			return 0;
+
+		Arrays.sort(nums);
+
+		return nums[nums.length - k];
+	}
+
+	public List<List<String>> groupAnagrams(String[] strs) {
+
+		List<List<String>> result = new ArrayList<List<String>>();
+		if (strs.length == 0)
+			return result;
+
+		List<String> tmp = new ArrayList<String>();
+		boolean found = false;
+
+		String compare = "";
+		for (int i = 0; i < strs.length; i++) {
+			char[] word = strs[i].toCharArray();
+			Arrays.sort(word);
+			compare = new String(word);
+			if (i == 0) {
+				tmp.add(compare);
+				tmp.add(strs[i]);
+				result.add(tmp);
+			} else {
+				found = false;
+				for (int j = 0; j < result.size(); j++) {
+					if (result.get(j).size() > 0) {
+						if (result.get(j).get(0).equals(compare)) {
+							result.get(j).add(strs[i]);
+							found = true;
+							break;
+						}
+
+					}
+
+				}
+				if (!found) {
+					tmp = new ArrayList<String>();
+					tmp.add(compare);
+					tmp.add(strs[i]);
+					result.add(tmp);
+				}
+			}
+		}
+		for (int i = 0; i < result.size(); i++) {
+			result.get(i).remove(0);
+		}
+
+		return result;
+	}
+
+	public int kthSmallest(int[][] matrix, int k) {
+		if (matrix.length == 0 || matrix[0].length == 0)
+			return 0;
+
+		PriorityQueue<Integer> pq = new PriorityQueue<Integer>((a1, a2) -> a1 - a2);
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				pq.add(matrix[i][j]);
+			}
+		}
+		while (k > 1) {
+			pq.poll();
+			k--;
+		}
+		return pq.poll();
+	}
+
+	public ListNode detectCycle(ListNode head) {
+		if (head == null || head.next == null)
+			return null;
+
+		ListNode faster = head;
+		ListNode slower = head;
+		boolean isCycle = false;
+		while (faster != null && slower != null && faster.next != null) {
+			slower = slower.next;
+			faster = faster.next.next;
+			if (slower == faster) {
+				isCycle = true;
+				break;
+			}
+
+		}
+
+		if (!isCycle)
+			return null;
+
+		while (head != faster) {
+			head = head.next;
+			faster = faster.next;
+		}
+
+		return faster;
+	}
+
+	public int findDuplicate(int[] nums) {
+		// leetcode solution
+		int tortoise = nums[0];
+		int hare = nums[0];
+		do {
+			tortoise = nums[tortoise];
+			hare = nums[nums[hare]];
+		} while (tortoise != hare);
+
+		int ptr1 = nums[0];
+		int ptr2 = tortoise;
+		while (ptr1 != ptr2) {
+			ptr1 = nums[ptr1];
+			ptr2 = nums[ptr2];
+		}
+
+		return ptr1;
+	}
+
+	public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+		Map<Long, Integer> AplusBcounts = new HashMap<Long, Integer>();
+
+		int result = 0;
+		long key = 0;
+		for (int i = 0; i < A.length; i++) {
+			for (int j = 0; j < B.length; j++) {
+				key = A[i] + B[j];
+				AplusBcounts.put(key, AplusBcounts.getOrDefault(key, 0) + 1);
+			}
+
+		}
+
+		for (int i = 0; i < C.length; i++) {
+			for (int j = 0; j < D.length; j++) {
+				key = 0 - (C[i] + D[j]);
+				result += AplusBcounts.getOrDefault(key, 0);
+			}
+
+		}
+
+		return result;
+	}
+
+	public void rotate(int[][] matrix) {
+		if (matrix.length <= 0)
+			return;
+
+		int length = matrix[0].length;
+		for (int i = 0; i < matrix.length; i++) {
+			int j = 0;
+			int k = length - 1;
+			int tmp = 0;
+			while (j < k) {
+				tmp = matrix[i][j];
+				matrix[i][j] = matrix[i][k];
+				matrix[i][k] = tmp;
+				j++;
+				k--;
+			}
+		}
+
+		for (int i = 0; i < matrix.length; i++) {
+			int tmp = 0;
+			for (int j = 0; j < length - i; j++) {
+				tmp = matrix[i][j];
+				matrix[i][j] = matrix[length - j - 1][length - i - 1];
+				matrix[length - j - 1][length - i - 1] = tmp;
+			}
+		}
+
+	}
+
+	public int kthSmallest(TreeNode root, int k) {
+		List<Integer> valuesSorted = new ArrayList<Integer>();
+		findKthElement(root, valuesSorted);
+		return valuesSorted.get(k - 1);
+	}
+
+	public void findKthElement(TreeNode node, List<Integer> valuesSorted) {
+
+		if (node == null)
+			return;
+
+		findKthElement(node.left, valuesSorted);
+
+		valuesSorted.add(node.val);
+
+		findKthElement(node.right, valuesSorted);
+
+	}
+
+	public List<List<Integer>> subsets(int[] nums) {
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		result.add(new ArrayList<Integer>());
+
+		int newNumber = -1;
+		List<Integer> newEntry;
+		int size = 0;
+		for (int i = 0; i < nums.length; i++) {
+			newNumber = nums[i];
+			size = result.size();
+			for (int j = 0; j < size; j++) {
+				newEntry = new ArrayList<Integer>();
+				newEntry.addAll(result.get(j));
+				newEntry.add(newNumber);
+				result.add(newEntry);
+			}
+		}
+
+		return result;
+	}
+
+	public int[] productExceptSelf(int[] nums) {
+		int[] productToLeft = new int[nums.length];
+		int[] productToRight = new int[nums.length];
+
+		int[] result = new int[nums.length];
+		productToLeft[0] = 1;
+		productToRight[nums.length - 1] = 1;
+
+		for (int i = 1; i < nums.length; i++)
+			productToLeft[i] = nums[i - 1] * productToLeft[i - 1];
+
+		for (int i = nums.length - 2; i >= 0; i--)
+			productToRight[i] = nums[i + 1] * productToRight[i + 1];
+
+		for (int i = 0; i < nums.length; i++)
+			result[i] = productToRight[i] * productToLeft[i];
+
+		return result;
+
+	}
+
+	public List<Integer> topKFrequent(int[] nums, int k) {
+		List<Integer> result = new ArrayList<Integer>();
+		if (nums.length == 0)
+			return result;
+
+		Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+
+		for (int i = 0; i < nums.length; i++) {
+			counts.putIfAbsent(nums[i], 0);
+			counts.put(nums[i], counts.get(nums[i]) + 1);
+		}
+
+		PriorityQueue<Integer> pq = new PriorityQueue<Integer>((n1, n2) -> counts.get(n1) - counts.get(n2));
+
+		for (Integer i : counts.keySet()) {
+			pq.add(i);
+			if (pq.size() > k)
+				pq.poll();
+		}
+
+		while (!pq.isEmpty())
+			result.add(0, pq.poll());
+
+		// Collections.reverse(result);
+
+		return result;
+
+	}
 
 	public int countPrimes(int n) {
 		boolean prime[] = new boolean[n + 1];
@@ -27,13 +390,13 @@ public class Problems {
 					prime[i] = false;
 			}
 		}
-		
+
 		int count = 0;
 		for (int i = 2; i < prime.length; i++) {
-			if(prime[i])
+			if (prime[i])
 				count++;
 		}
-		
+
 		return count;
 	}
 
