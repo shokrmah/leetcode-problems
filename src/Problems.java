@@ -17,6 +17,29 @@ import java.util.Stack;
 
 public class Problems {
 
+	public int[] findErrorNums(int[] nums) {
+		int[] count = new int[nums.length + 1];
+		int dup = 0;
+		for (int i = 0; i < nums.length; i++) {
+			count[nums[i]]++;
+			if (count[nums[i]] == 2)
+				dup = nums[i];
+		}
+
+		int[] result = new int[2];
+		result[0] = dup;
+	
+		for (int i = 1; i < count.length; i++) {
+			if (count[i] == 0) {
+				result[1] = i;
+				break;
+			}
+				
+		}
+
+		return result;
+	}
+
 	public int findBottomLeftValue(TreeNode root) {
 		if (root == null)
 			return -1;
@@ -31,13 +54,13 @@ public class Problems {
 			mostLeftVal = q.peek().val;
 			for (int i = 0; i < size; i++) {
 				tn = q.poll();
-				if(tn.left != null)
+				if (tn.left != null)
 					q.add(tn.left);
-				if(tn.right != null)
+				if (tn.right != null)
 					q.add(tn.right);
 			}
 		}
-		
+
 		return mostLeftVal;
 	}
 
