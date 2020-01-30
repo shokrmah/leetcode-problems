@@ -17,6 +17,33 @@ import java.util.Stack;
 
 public class Problems {
 
+	public TreeNode insertIntoBST(TreeNode root, int val) {
+		if (root == null) {
+			return new TreeNode(val);
+		}
+
+		TreeNode node = root;
+
+		while (node != null) {
+			if (val < node.val) {
+				if(node.left == null) {
+					node.left = new TreeNode(val);
+					break;
+				}
+				else
+					node = node.left;
+			}
+			else {
+				if(node.right == null) {
+					node.right = new TreeNode(val);
+					break;
+				}
+				else
+					node = node.right;
+			}
+		}
+	}
+
 	public int[] findErrorNums(int[] nums) {
 		int[] count = new int[nums.length + 1];
 		int dup = 0;
@@ -28,13 +55,13 @@ public class Problems {
 
 		int[] result = new int[2];
 		result[0] = dup;
-	
+
 		for (int i = 1; i < count.length; i++) {
 			if (count[i] == 0) {
 				result[1] = i;
 				break;
 			}
-				
+
 		}
 
 		return result;
