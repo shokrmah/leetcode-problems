@@ -42,6 +42,8 @@ public class Problems {
 					node = node.right;
 			}
 		}
+		
+		return root;
 	}
 
 	public int[] findErrorNums(int[] nums) {
