@@ -1,3 +1,4 @@
+import java.util.List;
 
 public class MainProgram {
 
@@ -60,11 +61,34 @@ public class MainProgram {
 //				break;
 //			}
 //		}
-		
-		//bp.invalidTransactions(new String[] {"chalicefy,639,1283,beijing","maybe,324,192,frankfurt","bob,627,974,amsterdam","alex,962,125,chicago","iris,849,36,beijing","chalicefy,70,415,bangkok","chalicefy,112,467,frankfurt","xnova,358,82,barcelona","chalicefy,180,543,beijing","xnova,624,572,budapest","lee,651,1761,chicago","alex,991,1698,budapest","bob,531,700,amsterdam","chalicefy,926,478,budapest","iris,235,1993,frankfurt","alex,107,812,beijing","maybe,199,1313,barcelona"});
-		
 
-		System.out.println(bp.decodeString("3[a2[c]]"));
+		// bp.invalidTransactions(new String[]
+		// {"chalicefy,639,1283,beijing","maybe,324,192,frankfurt","bob,627,974,amsterdam","alex,962,125,chicago","iris,849,36,beijing","chalicefy,70,415,bangkok","chalicefy,112,467,frankfurt","xnova,358,82,barcelona","chalicefy,180,543,beijing","xnova,624,572,budapest","lee,651,1761,chicago","alex,991,1698,budapest","bob,531,700,amsterdam","chalicefy,926,478,budapest","iris,235,1993,frankfurt","alex,107,812,beijing","maybe,199,1313,barcelona"});
+
+		// "zzzyypqjkjkefjkjkefjkjkefjkjkefyypqjkjkefjkjkefjkjkefjkjkefef"
+
+		// String s = "3[z]2[2[y]pq4[2[jk]e1[f]]]ef";
+		// System.out.println(bp.decodeString(s));
+
+//		s = "2[2[2[r]c]b]";
+//		System.out.println(bp.decodeString(s));
+//		
+//		s = "3[a]2[b4[F]c]";
+//		System.out.println(bp.decodeString(s));
+//		
+//		s = "100[leetcode]";
+//		System.out.println(bp.decodeString(s));
+//
+//		s = "3[a]2[bc]";
+//		System.out.println(bp.decodeString(s));
+//
+//		s = "3[a2[c]]";
+//		System.out.println(bp.decodeString(s));
+//
+		// String s = "2[abc]3[cd]ef";
+		// System.out.println(bp.decodeString(s));
+
+		System.out.println(bp.frequencySort("tree"));
 	}
 
 }
