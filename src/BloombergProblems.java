@@ -7,35 +7,354 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Stack;
 
 public class BloombergProblems {
 
+	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+		if (l1 == null)
+			return l2;
+		if (l2 == null)
+			return l1;
+
+		int extra = 0;
+
+		ListNode result;
+		int sum = l1.val + l2.val;
+		if (sum >= 10) {
+			result = new ListNode(sum - 10);
+			extra = 1;
+		} else
+			result = new ListNode(sum);
+
+		l1 = l1.next;
+		l2 = l2.next;
+		ListNode it = result;
+		while (l1 != null && l2 != null) {
+			sum = l1.val + l2.val + extra;
+			if (sum >= 10) {
+				it.next = new ListNode(sum - 10);
+				extra = 1;
+			} else {
+				it.next = new ListNode(sum);
+				extra =0;
+			}
+			
+			it = it.next;
+			l1 = l1.next;
+			l2 = l2.next;
+		}
+		
+		while(l1 != null) {
+			sum = l1.val + extra;
+			if (sum >= 10) {
+				it.next = new ListNode(sum - 10);
+				extra = 1;
+			} else {
+				it.next = new ListNode(sum);
+				extra =0;
+			}
+			it = it.next;
+			l1 = l1.next;
+		}
+		while(l2 != null) {
+			sum = l2.val + extra;
+			if (sum >= 10) {
+				it.next = new ListNode(sum - 10);
+				extra = 1;
+			} else {
+				it.next = new ListNode(sum);
+				extra =0;
+			}
+			it = it.next;
+			l2 = l2.next;
+		}
+		
+		if(extra  == 1)
+			it.next = new ListNode(1);
+
+		return result;
+	}
+
+	public int compress(char[] chars) {
+
+		if (chars.length <= 1)
+			return chars.length;
+
+		int currentIndex = 0;
+		char currentChar = chars[0];
+		int countOfRepeat = 1;
+		String intVal = "";
+
+		for (int i = 1; i < chars.length; i++) {
+			if (chars[i] == currentChar) {
+				countOfRepeat++;
+			} else if (countOfRepeat > 1) {
+				intVal = countOfRepeat + "";
+				chars[currentIndex] = currentChar;
+				for (int j = 0; j < intVal.length(); j++) {
+					currentIndex++;
+					chars[currentIndex] = intVal.charAt(j);
+				}
+
+				countOfRepeat = 1;
+				currentChar = chars[i];
+				currentIndex++;
+			} else {
+				// currentIndex++;
+				chars[currentIndex] = currentChar;
+				currentChar = chars[i];
+				currentIndex++;
+			}
+
+		}
+
+		if (countOfRepeat > 1) {
+			chars[currentIndex] = currentChar;
+			intVal = countOfRepeat + "";
+			for (int j = 0; j < intVal.length(); j++) {
+				currentIndex++;
+				chars[currentIndex] = intVal.charAt(j);
+			}
+		} else {
+			// currentIndex++;
+			chars[currentIndex] = currentChar;
+		}
+
+		return currentIndex + 1;
+	}
+
+	public boolean search(int[] nums, int target) {
+
+		if (nums.length == 0)
+			return false;
+
+		int pivot = findPivot(nums, 0, nums.length - 1);
+
+		if (pivot == -1)
+			return binarySearch(nums, 0, nums.length - 1, target);
+
+		if (nums[pivot] == target)
+			return true;
+
+		if (nums[0] <= target)
+			return binarySearch(nums, 0, pivot - 1, target);
+
+		return binarySearch(nums, pivot + 1, nums.length - 1, target);
+
+	}
+
+	public int findPivot(int[] nums, int low, int high) {
+		if (high < low)
+			return -1;
+		if (high == low)
+			return -1;
+
+		int mid = (low + high) / 2;
+
+		if (mid < high && nums[mid] > nums[mid + 1])
+			return mid;
+
+		if (mid > low && nums[mid] < nums[mid - 1])
+			return mid - 1;
+
+		if (nums[low] >= nums[mid])
+			return findPivot(nums, low, mid - 1);
+		return findPivot(nums, mid + 1, high);
+	}
+
+	public boolean binarySearch(int[] nums, int low, int high, int target) {
+		if (high < low)
+			return false;
+
+		int mid = (high + low) / 2;
+
+		if (nums[mid] == target)
+			return true;
+		else if (target > nums[mid])
+			return binarySearch(nums, mid + 1, high, target);
+		else
+			return binarySearch(nums, low, mid - 1, target);
+	}
+
+	public boolean isCousins(TreeNode root, int x, int y) {
+
+		int xDepth = -1;
+		int yDepth = -1;
+
+		if (root.val == x || root.val == y)
+			return false;
+
+		Queue<TreeNode> queue = new LinkedList<TreeNode>();
+		queue.add(root);
+
+		TreeNode tmpNode;
+		int currentLevelSize = 0;
+		int currentLevel = -1;
+		int xParent = -1;
+		int yParent = -1;
+		int parent = -1;
+
+		while (!queue.isEmpty()) {
+			currentLevelSize = queue.size();
+			currentLevel++;
+			for (int i = 0; i < currentLevelSize; i++) {
+				parent++;
+				tmpNode = queue.poll();
+				if (tmpNode.left != null) {
+					queue.add(tmpNode.left);
+					if (tmpNode.left.val == x) {
+						xDepth = currentLevel;
+						xParent = parent;
+					}
+					if (tmpNode.left.val == y) {
+						yDepth = currentLevel;
+						yParent = parent;
+					}
+				} else if (tmpNode.right != null) {
+					queue.add(tmpNode.right);
+					if (tmpNode.right.val == x) {
+						xDepth = currentLevel;
+						xParent = parent;
+					}
+					if (tmpNode.right.val == y) {
+						yDepth = currentLevel;
+						yParent = parent;
+					}
+				}
+
+				if (xDepth != -1 && yDepth != -1) {
+					queue.clear();
+					break;
+				}
+			}
+
+		}
+		if (xDepth != -1 && xDepth == yDepth && xParent != yParent)
+			return true;
+
+		return false;
+	}
+
+	public int widthOfBinaryTree(TreeNode root) {
+		if (root == null)
+			return 0;
+
+		if (root.left == null && root.right == null)
+			return 1;
+
+		int maxWidth = 1;
+
+		Queue<TreeNode> queue = new LinkedList<TreeNode>();
+
+		queue.add(root);
+
+		TreeNode tmpNode;
+		int currentSize = 0;
+
+		// int tmpWidth = 0;
+		int nodeLocation = -1;
+		int firstNotNull = -1;
+		int lastNotNull = -1;
+		int nullCounts = -1;
+		while (!queue.isEmpty()) {
+
+			currentSize = queue.size();
+			// tmpWidth = 0;
+			firstNotNull = -1;
+			lastNotNull = -1;
+			for (int i = 0; i < currentSize; i++) {
+				tmpNode = queue.poll();
+				nodeLocation++;
+				if (tmpNode.left != null) {
+					queue.add(tmpNode.left);
+					if (firstNotNull == -1)
+						firstNotNull = nodeLocation;
+					lastNotNull = nodeLocation;
+				} else if (firstNotNull != -1)
+					nullCounts++;
+
+				nodeLocation++;
+				if (tmpNode.right != null) {
+					queue.add(tmpNode.right);
+					if (firstNotNull == -1)
+						firstNotNull = nodeLocation;
+					lastNotNull = nodeLocation;
+				} else if (firstNotNull != -1)
+					nullCounts++;
+
+			}
+
+			if ((lastNotNull - firstNotNull + 1) > maxWidth)
+				maxWidth = lastNotNull - firstNotNull + 1;
+
+		}
+
+		return maxWidth;
+	}
+
+	public List<List<Integer>> generate(int numRows) {
+		if (numRows <= 0)
+			return new ArrayList<List<Integer>>();
+
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		List<Integer> tmp = new ArrayList<Integer>();
+		tmp.add(1);
+		result.add(tmp);
+
+		if (numRows == 1)
+			return result;
+
+		tmp = new ArrayList<Integer>();
+		tmp.add(1);
+		tmp.add(1);
+
+		result.add(tmp);
+
+		List<Integer> myLastList;
+		int currentValue = 0;
+		for (int i = 2; i < numRows; i++) {
+			tmp = new ArrayList<Integer>();
+			myLastList = result.get(result.size() - 1);
+			tmp.add(myLastList.get(0));
+			for (int j = 1; j < myLastList.size(); j++) {
+				currentValue = myLastList.get(j - 1) + myLastList.get(j);
+				tmp.add(currentValue);
+			}
+			tmp.add(myLastList.get(myLastList.size() - 1));
+			result.add(tmp);
+		}
+
+		return result;
+	}
+
 	public String frequencySort(String s) {
-		Map<Character,Integer> counts = new HashMap<Character,Integer>();
+		Map<Character, Integer> counts = new HashMap<Character, Integer>();
 		for (int i = 0; i < s.length(); i++) {
 			counts.putIfAbsent(s.charAt(i), 0);
 			counts.put(s.charAt(i), counts.get(s.charAt(i)) + 1);
 		}
-		
-		List<Map.Entry<Character, Integer>> sorted = new LinkedList<Map.Entry<Character, Integer> >(counts.entrySet());
-		
-		Collections.sort(sorted, new Comparator<Map.Entry<Character, Integer> >() { 
+
+		List<Map.Entry<Character, Integer>> sorted = new LinkedList<Map.Entry<Character, Integer>>(counts.entrySet());
+
+		Collections.sort(sorted, new Comparator<Map.Entry<Character, Integer>>() {
 			@Override
 			public int compare(Entry<Character, Integer> o1, Entry<Character, Integer> o2) {
 				// TODO Auto-generated method stub
 				return o2.getValue().compareTo(o1.getValue());
-			} 
-        }); 
-		
-		StringBuilder sb= new StringBuilder();
-		
+			}
+		});
+
+		StringBuilder sb = new StringBuilder();
+
 		for (int i = 0; i < sorted.size(); i++) {
 			for (int j = 0; j < sorted.get(i).getValue(); j++) {
 				sb.append(sorted.get(i).getKey());
 			}
 		}
-		
+
 		return sb.toString();
 	}
 

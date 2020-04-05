@@ -88,7 +88,9 @@ public class MainProgram {
 		// String s = "2[abc]3[cd]ef";
 		// System.out.println(bp.decodeString(s));
 
-		System.out.println(bp.frequencySort("tree"));
+		//System.out.println(bp.frequencySort("tree"));
+		System.out.println(bp.compress(new char[] {'a','a','a','b','c','c','c'}));
+		
 	}
 
 }
