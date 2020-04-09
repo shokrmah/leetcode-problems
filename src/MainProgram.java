@@ -88,9 +88,25 @@ public class MainProgram {
 		// String s = "2[abc]3[cd]ef";
 		// System.out.println(bp.decodeString(s));
 
-		//System.out.println(bp.frequencySort("tree"));
-		System.out.println(bp.compress(new char[] {'a','a','a','b','c','c','c'}));
-		
+		// System.out.println(bp.frequencySort("tree"));
+
+//		Input: [[1,2], [3], [3], []] 
+		// Output: [[0,1,3],[0,2,3]]
+		int[][] graph = new int[5][];
+		graph[0] = new int[] {  1 };
+		graph[1] = new int[] { 3, 2, 4 };
+		graph[2] = new int[] { 3 };
+		graph[3] = new int[] { 4 };
+		graph[4] = new int[0];
+
+		List<List<Integer>> r = bp.allPathsSourceTarget(graph);
+		for (int i = 0; i < r.size(); i++) {
+			for (int j = 0; j < r.get(i).size(); j++) {
+				System.out.print(r.get(i).get(j));
+			}
+			System.out.println("");
+		}
+
 	}
 
 }

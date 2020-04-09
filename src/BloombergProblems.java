@@ -12,6 +12,58 @@ import java.util.Stack;
 
 public class BloombergProblems {
 
+	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+
+		if (graph.length == 0)
+			return result;
+		else if (graph.length == 1) {
+			List<Integer> tmp = new ArrayList<Integer>();
+			tmp.add(0);
+			result.add(tmp);
+			return result;
+		}
+
+
+		List<Integer> tmp = new ArrayList<Integer>();
+
+		addPaths(result, tmp, graph, 0);
+
+		return result;
+	}
+
+//	Input: [[1,2], [3], [3], []] 
+	// Output: [[0,1,3],[0,2,3]]
+	public void addPaths(List<List<Integer>> result, List<Integer> tmp, int[][] graph, int index) {
+		if (tmp.size() > 1 && tmp.get(tmp.size() - 1) == graph.length - 1) {
+			result.add(tmp);
+			return;
+		} else if (graph[index].length == 0) {
+			return;
+		}
+
+		for (int i = 0; i < graph[index].length; i++) {
+			if (index == 0) {
+				tmp = new ArrayList<Integer>();
+				tmp.add(0);
+			}
+			if(i > 0 && tmp.size() > 1) {
+				List<Integer> myTmp = new ArrayList<Integer>();
+				for (int j = 0; j <= i; j++) {
+					myTmp.add(tmp.get(j));
+				}
+				tmp = new ArrayList<Integer>();
+				tmp = myTmp;
+//				for (int j = tmp.size() - 1; j > i; j--) {
+//					tmp.remove(j);
+//				}
+
+			}
+			tmp.add(graph[index][i]);
+			addPaths(result, tmp, graph, graph[index][i]);
+		}
+	}
+
 	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 
 		if (l1 == null)
@@ -39,40 +91,40 @@ public class BloombergProblems {
 				extra = 1;
 			} else {
 				it.next = new ListNode(sum);
-				extra =0;
+				extra = 0;
 			}
-			
+
 			it = it.next;
 			l1 = l1.next;
 			l2 = l2.next;
 		}
-		
-		while(l1 != null) {
+
+		while (l1 != null) {
 			sum = l1.val + extra;
 			if (sum >= 10) {
 				it.next = new ListNode(sum - 10);
 				extra = 1;
 			} else {
 				it.next = new ListNode(sum);
-				extra =0;
+				extra = 0;
 			}
 			it = it.next;
 			l1 = l1.next;
 		}
-		while(l2 != null) {
+		while (l2 != null) {
 			sum = l2.val + extra;
 			if (sum >= 10) {
 				it.next = new ListNode(sum - 10);
 				extra = 1;
 			} else {
 				it.next = new ListNode(sum);
-				extra =0;
+				extra = 0;
 			}
 			it = it.next;
 			l2 = l2.next;
 		}
-		
-		if(extra  == 1)
+
+		if (extra == 1)
 			it.next = new ListNode(1);
 
 		return result;
@@ -422,27 +474,6 @@ public class BloombergProblems {
 		}
 
 		return sb.toString();
-	}
-
-	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-		List<List<Integer>> result = new ArrayList<List<Integer>>();
-
-		if (graph.length == 0)
-			return result;
-		else if (graph.length == 1) {
-			List<Integer> tmp = new ArrayList<Integer>();
-			tmp.add(0);
-			result.add(tmp);
-			return result;
-		}
-
-		for (int i = 0; i < graph[0].length; i++) {
-			List<Integer> tmp = new ArrayList<Integer>();
-			tmp.add(0);
-
-		}
-
-		return result;
 	}
 
 //3[a2[c]]
