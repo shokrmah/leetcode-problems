@@ -3,65 +3,109 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
 
 public class BloombergProblems {
 
-	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-		List<List<Integer>> result = new ArrayList<List<Integer>>();
-
-		if (graph.length == 0)
-			return result;
-		else if (graph.length == 1) {
-			List<Integer> tmp = new ArrayList<Integer>();
-			tmp.add(0);
-			result.add(tmp);
-			return result;
+	 public class Group {
+			public int iStart;
+			public int jStart;
+			public int iEnd;
+			public int jEnd;
+			public int groupID;
 		}
+	
+	public int numIslands(char[][] grid) {
 
+	  	if (grid.length == 0)
+				return 0;
 
-		List<Integer> tmp = new ArrayList<Integer>();
+			int groupId = 1;
+			//int returnedGroupId = -2;
+			Map<Integer,Group> myGroups = new HashMap<Integer, Group>();
+			for (int i = 0; i < grid.length; i++) {
+				for (int j = 0; j < grid[i].length; j++) {
+					if (grid[i][j] == '0')
+						continue;
+					//returnedGroupId = isBesideLand(grid, i, j);
+					if (isBesideLand(grid, i, j)) {
+						myGroups.get(groupId - 1).iEnd = i;
+						myGroups.get(groupId - 1).jEnd = j;
+					} else {
+						Group newGroup = new Group();
+						newGroup.iStart = i;
+						newGroup.iEnd = i;
+						newGroup.jStart = j;
+						newGroup.jEnd = j;
+						newGroup.groupID = groupId;
+						myGroups.put(groupId,newGroup);
+						groupId++;
+						
+					}
+				}
+			}
 
-		addPaths(result, tmp, graph, 0);
+			
+			return myGroups.size();
+	}
 
+	public boolean isBesideLand(char[][] grid, int i, int j) {
+		if ((i - 1 >= 0 && grid[i - 1][j] == '1') || (j - 1 >= 0 && grid[i][j - 1] == '1'))
+			return true;
+
+		return false;
+	}
+
+	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+//		List<List<Integer>> result = new ArrayList<List<Integer>>();
+//
+//		if (graph.length == 0)
+//			return result;
+//		else if (graph.length == 1) {
+//			List<Integer> tmp = new ArrayList<Integer>();
+//			tmp.add(0);
+//			result.add(tmp);
+//			return result;
+//		}
+//
+//
+//		List<Integer> tmp = new ArrayList<Integer>();
+//
+//		addPaths(result, tmp, graph, 0);
+//
+//		return result;
+
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		addPaths(result, new ArrayList<Integer>(), graph, 0);
 		return result;
 	}
 
 //	Input: [[1,2], [3], [3], []] 
 	// Output: [[0,1,3],[0,2,3]]
 	public void addPaths(List<List<Integer>> result, List<Integer> tmp, int[][] graph, int index) {
-		if (tmp.size() > 1 && tmp.get(tmp.size() - 1) == graph.length - 1) {
-			result.add(tmp);
-			return;
-		} else if (graph[index].length == 0) {
-			return;
-		}
+//		if (tmp.size() > 1 && tmp.get(tmp.size() - 1) == graph.length - 1) {
+//			result.add(tmp);
+//			return;
+//		} else if (graph[index].length == 0) {
+//			return;
+//		}
+
+		tmp.add(index);
+		if (index == graph.length - 1)
+			result.add(new ArrayList<Integer>(tmp));
 
 		for (int i = 0; i < graph[index].length; i++) {
-			if (index == 0) {
-				tmp = new ArrayList<Integer>();
-				tmp.add(0);
-			}
-			if(i > 0 && tmp.size() > 1) {
-				List<Integer> myTmp = new ArrayList<Integer>();
-				for (int j = 0; j <= i; j++) {
-					myTmp.add(tmp.get(j));
-				}
-				tmp = new ArrayList<Integer>();
-				tmp = myTmp;
-//				for (int j = tmp.size() - 1; j > i; j--) {
-//					tmp.remove(j);
-//				}
-
-			}
-			tmp.add(graph[index][i]);
 			addPaths(result, tmp, graph, graph[index][i]);
 		}
+
+		tmp.remove(tmp.size() - 1);
 	}
 
 	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
