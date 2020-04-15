@@ -14,53 +14,124 @@ import java.util.Stack;
 
 public class BloombergProblems {
 
-	 public class Group {
-			public int iStart;
-			public int jStart;
-			public int iEnd;
-			public int jEnd;
-			public int groupID;
-		}
+	public Node copyRandomList(Node head) {
+		if (head == null)
+			return null;
+
+		Map<Integer, Node> myMap = new HashMap<Integer, Node>();
+		Node newHead = copyNode(head);
+		
+		Node mover = head;
 	
-	public int numIslands(char[][] grid) {
+		Node moverNewHead = newHead;
 
-	  	if (grid.length == 0)
-				return 0;
-
-			int groupId = 1;
-			//int returnedGroupId = -2;
-			Map<Integer,Group> myGroups = new HashMap<Integer, Group>();
-			for (int i = 0; i < grid.length; i++) {
-				for (int j = 0; j < grid[i].length; j++) {
-					if (grid[i][j] == '0')
-						continue;
-					//returnedGroupId = isBesideLand(grid, i, j);
-					if (isBesideLand(grid, i, j)) {
-						myGroups.get(groupId - 1).iEnd = i;
-						myGroups.get(groupId - 1).jEnd = j;
-					} else {
-						Group newGroup = new Group();
-						newGroup.iStart = i;
-						newGroup.iEnd = i;
-						newGroup.jStart = j;
-						newGroup.jEnd = j;
-						newGroup.groupID = groupId;
-						myGroups.put(groupId,newGroup);
-						groupId++;
-						
-					}
-				}
+		int index = 0;
+		while(moverNewHead != null) {
+			myMap.put(index, moverNewHead);
+			index++;
+			moverNewHead = moverNewHead.next;
+		}
+		
+		moverNewHead = newHead;
+		while (mover != null) {
+			if (mover.random != null) {
+				moverNewHead.random = myMap.get(mover.random.val);
 			}
 
-			
-			return myGroups.size();
+			mover = mover.next;
+			moverNewHead = moverNewHead.next;
+		}
+
+		return newHead;
 	}
 
-	public boolean isBesideLand(char[][] grid, int i, int j) {
-		if ((i - 1 >= 0 && grid[i - 1][j] == '1') || (j - 1 >= 0 && grid[i][j - 1] == '1'))
-			return true;
+	public Node copyNode(Node original) {
+		if (original == null)
+			return null;
 
-		return false;
+		Node copy = new Node(original.val);
+		copy.next = copyNode(original.next);
+
+		return copy;
+	}
+
+	public boolean wordBreak(String s, List<String> wordDict) {
+
+		Set<String> dictionary = new HashSet<String>();
+		for (int i = 0; i < wordDict.size(); i++) {
+			dictionary.add(wordDict.get(i));
+
+		}
+
+		int n = s.length();
+		boolean[] dp = new boolean[n + 1];
+		dp[0] = true;
+		for (int i = 1; i <= n; i++) {
+			if (dictionary.contains(s.substring(0, i))) {
+				dp[i] = true;
+				continue;
+			}
+			for (int j = 0; j < i; j++) {
+				if (dp[j] && dictionary.contains(s.substring(j, i))) {
+					dp[i] = true;
+					break;
+				}
+			}
+		}
+		return dp[n];
+
+//		List<StringBuilder> stringList = new ArrayList<StringBuilder>();
+//		StringBuilder sb = new StringBuilder();
+//		stringList.add(sb);
+//
+//		
+//		int size = 0;
+//		for (int i = 0; i < s.length(); i++) {
+//			size = stringList.size();
+//			for (int j = 0; j < size; j++) {
+//				stringList.get(j).append(s.charAt(i));
+//				if (dictionary.contains(stringList.get(j).toString())) {
+//					if(i == s.length() - 1)
+//						return true;
+//					StringBuilder sb2 = new StringBuilder();
+//					stringList.add(sb2);
+//				}
+//			}
+//
+//		}
+//
+//
+//		return false;
+	}
+
+	public int numIslands(char[][] grid) {
+
+		int islandsCount = 0;
+
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				if (grid[i][j] == '1') {
+					dfs(grid, i, j);
+					islandsCount++;
+				}
+			}
+		}
+
+		return islandsCount;
+	}
+
+	public void dfs(char[][] grid, int i, int j) {
+		if (i >= grid.length || i < 0 || j >= grid[i].length || j < 0)
+			return;
+
+		if (grid[i][j] == '1') {
+			grid[i][j] = '2';
+			dfs(grid, i + 1, j);
+			dfs(grid, i - 1, j);
+			dfs(grid, i, j + 1);
+			dfs(grid, i, j - 1);
+
+		}
 	}
 
 	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {

@@ -6,6 +6,7 @@ public class Node {
 	public Node prev;
     public Node next;
     public Node child;
+    public Node random;
 	
     public List<Node> children;
 
@@ -13,6 +14,8 @@ public class Node {
 
     public Node(int _val) {
         val = _val;
+        next = null;
+        random = null;
     }
 
     public Node(int _val, List<Node> _children) {

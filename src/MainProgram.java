@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainProgram {
@@ -92,16 +93,19 @@ public class MainProgram {
 
 //		Input: [[1,2], [3], [3], []] 
 		// Output: [[0,1,3],[0,2,3]]
-		char[][] graph = new char[2][];
-		graph[0] = new char[] { '1' };
-		graph[1] = new char[] { '1' };
-		//graph[2] = new char[] { '1', '1', '1' };
-		/// graph[3] = new int[] { 4 };
-		// graph[4] = new int[0];
+		List<String> a = new ArrayList<String>();
+		
+		//"acaaaaabbbdbcccdcdaadcdccacbcccabbbbcdaaaaaadb"
 
-		int r = bp.numIslands(graph);
-		System.out.println(r);
-
+		Node n = new Node(7);
+		Node n2 = new Node(13);
+		n.next = n2;
+		n.random = null;
+		n2.next = null;
+		n2.random = n;
+		
+		Node m = bp.copyRandomList(n);
+		System.out.println(m);
 	}
 
 }
