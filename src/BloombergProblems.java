@@ -15,6 +15,24 @@ import java.util.Stack;
 
 public class BloombergProblems {
 
+	public int firstUniqChar(String s) {
+		if (s.length() == 0)
+			return -1;
+
+		int[] counts = new int[28];
+
+		for (int i = 0; i < s.length(); i++) {
+			counts[s.charAt(i) - 'a']++;
+		}
+		
+		for (int i = 0; i < s.length(); i++) {
+			if(counts[s.charAt(i) - 'a']  == 1)
+				return i;
+		}
+
+		return -1;
+	}
+
 	public int triangleNumber(int[] nums) {
 		int count = 0;
 
@@ -27,11 +45,11 @@ public class BloombergProblems {
 		for (int i = 0; i < nums.length - 2; i++) {
 			k = i + 2;
 			for (int j = i + 1; j < nums.length - 1 && nums[i] != 0; j++) {
-				 while (k < nums.length && nums[i] + nums[j] > nums[k])
-                    k++;
-                count += k - j - 1;
-						
-				}
+				while (k < nums.length && nums[i] + nums[j] > nums[k])
+					k++;
+				count += k - j - 1;
+
+			}
 
 		}
 
