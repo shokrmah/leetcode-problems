@@ -1,3 +1,4 @@
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,28 +15,64 @@ import java.util.Stack;
 
 public class BloombergProblems {
 
+	public int triangleNumber(int[] nums) {
+		int count = 0;
+
+		if (nums.length < 3)
+			return 0;
+
+		Arrays.sort(nums);
+
+		int k = 0;
+		for (int i = 0; i < nums.length - 2; i++) {
+			k = i + 2;
+			for (int j = i + 1; j < nums.length - 1 && nums[i] != 0; j++) {
+				 while (k < nums.length && nums[i] + nums[j] > nums[k])
+                    k++;
+                count += k - j - 1;
+						
+				}
+
+		}
+
+		return count;
+	}
+
+	public boolean isValidBST(TreeNode root) {
+		return helper(root, null, null);
+	}
+
+	public boolean helper(TreeNode node, Integer lower, Integer upper) {
+		if (node == null)
+			return true;
+
+		int val = node.val;
+		if (lower != null && val <= lower)
+			return false;
+		if (upper != null && val >= upper)
+			return false;
+
+		if (!helper(node.right, val, upper))
+			return false;
+		if (!helper(node.left, lower, val))
+			return false;
+		return true;
+	}
+
 	public Node copyRandomList(Node head) {
 		if (head == null)
 			return null;
 
-		Map<Integer, Node> myMap = new HashMap<Integer, Node>();
-		Node newHead = copyNode(head);
-		
-		Node mover = head;
-	
-		Node moverNewHead = newHead;
+		Map<Node, Node> myMap = new HashMap<Node, Node>();
 
-		int index = 0;
-		while(moverNewHead != null) {
-			myMap.put(index, moverNewHead);
-			index++;
-			moverNewHead = moverNewHead.next;
-		}
-		
-		moverNewHead = newHead;
+		Node mover = head;
+		Node newHead = copyNode(mover, myMap);
+
+		Node moverNewHead = newHead;
+		mover = head;
 		while (mover != null) {
 			if (mover.random != null) {
-				moverNewHead.random = myMap.get(mover.random.val);
+				moverNewHead.random = myMap.get(mover.random);
 			}
 
 			mover = mover.next;
@@ -45,13 +82,13 @@ public class BloombergProblems {
 		return newHead;
 	}
 
-	public Node copyNode(Node original) {
+	public Node copyNode(Node original, Map<Node, Node> myMap) {
 		if (original == null)
 			return null;
 
 		Node copy = new Node(original.val);
-		copy.next = copyNode(original.next);
-
+		copy.next = copyNode(original.next, myMap);
+		myMap.put(original, copy);
 		return copy;
 	}
 

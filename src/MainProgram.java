@@ -97,15 +97,16 @@ public class MainProgram {
 		
 		//"acaaaaabbbdbcccdcdaadcdccacbcccabbbbcdaaaaaadb"
 
-		Node n = new Node(7);
-		Node n2 = new Node(13);
-		n.next = n2;
-		n.random = null;
-		n2.next = null;
-		n2.random = n;
 		
-		Node m = bp.copyRandomList(n);
-		System.out.println(m);
+		TreeNode tn = new TreeNode(5);
+		tn.left = new TreeNode(1);
+		tn.left.left = new TreeNode(0);
+		tn.left = new TreeNode(2);
+		tn.right = new TreeNode(5);
+		tn.right.left = new TreeNode(4);
+		tn.right.right = new TreeNode(7);
+		
+		bp.isValidBST(tn);
 	}
 
 }
