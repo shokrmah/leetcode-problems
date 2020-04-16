@@ -94,19 +94,22 @@ public class MainProgram {
 //		Input: [[1,2], [3], [3], []] 
 		// Output: [[0,1,3],[0,2,3]]
 		List<String> a = new ArrayList<String>();
-		
-		//"acaaaaabbbdbcccdcdaadcdccacbcccabbbbcdaaaaaadb"
 
-		
-		TreeNode tn = new TreeNode(5);
-		tn.left = new TreeNode(1);
-		tn.left.left = new TreeNode(0);
-		tn.left = new TreeNode(2);
-		tn.right = new TreeNode(5);
-		tn.right.left = new TreeNode(4);
-		tn.right.right = new TreeNode(7);
-		
-		bp.isValidBST(tn);
+		// "acaaaaabbbdbcccdcdaadcdccacbcccabbbbcdaaaaaadb"
+
+//		TreeNode tn = new TreeNode(5);
+//		tn.left = new TreeNode(1);
+//		tn.left.left = new TreeNode(0);
+//		tn.left = new TreeNode(2);
+//		tn.right = new TreeNode(5);
+//		tn.right.left = new TreeNode(4);
+//		tn.right.right = new TreeNode(7);
+
+		//System.out.println(bp.dieSimulator(2, new int[] { 1, 1, 2, 2, 2, 3 }));
+		List<String> s = new ArrayList<String>();
+		s.add("leet");
+		s.add("code");
+		System.out.println(bp.wordBreak("leetcode", s));
 	}
 
 }

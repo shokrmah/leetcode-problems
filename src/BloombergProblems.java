@@ -15,6 +15,78 @@ import java.util.Stack;
 
 public class BloombergProblems {
 
+	public int dieSimulator(int n, int[] r) {
+		long mod = (long) (Math.pow(10, 9) + 7);
+		if (n == 1)
+			return 6;
+		long[][] dp = new long[n][7];
+		for (int i = 0; i < 6; i++) {
+			dp[0][i] = 1;
+		}
+		dp[0][6] = 6;
+		for (int i = 1; i < n; i++) {
+			for (int j = 0; j < 6; j++) {
+				long sum = dp[i - 1][6];
+				if (i - r[j] == 0)
+					sum--; // exclude 111, say i = 2, r[j] = 2;
+				if (i - r[j] - 1 >= 0)
+					sum = (sum - dp[i - r[j] - 1][6] + dp[i - r[j] - 1][j] + mod) % mod; // exclude 2111, 3111, but not
+																							// 1111
+				dp[i][j] = sum;
+				dp[i][6] = (dp[i][6] + sum) % mod;
+			}
+		}
+		return (int) dp[n - 1][6];
+	}
+
+	public ListNode addTwoNumbers2(ListNode l1, ListNode l2) {
+		if (l1 == null)
+			return l2;
+		if (l2 == null)
+			return l1;
+
+		Stack<Integer> firstList = new Stack<Integer>();
+		Stack<Integer> secondList = new Stack<Integer>();
+
+		while (l1 != null) {
+			firstList.add(l1.val);
+			l1 = l1.next;
+		}
+
+		while (l2 != null) {
+			secondList.add(l2.val);
+			l2 = l2.next;
+		}
+
+		ListNode head = null;
+
+		int sum = 0;
+		int remainder = 0;
+
+		while (!firstList.isEmpty() || !secondList.isEmpty()) {
+			sum = remainder;
+			if (!firstList.isEmpty())
+				sum = sum + firstList.pop();
+			if (!secondList.isEmpty())
+				sum = sum + secondList.pop();
+
+			remainder = sum / 10;
+			sum = sum % 10;
+
+			ListNode node = new ListNode(sum);
+			node.next = head;
+			head = node;
+		}
+
+		if (remainder > 0) {
+			ListNode node = new ListNode(remainder);
+			node.next = head;
+			head = node;
+		}
+
+		return head;
+	}
+
 	public int firstUniqChar(String s) {
 		if (s.length() == 0)
 			return -1;
@@ -24,9 +96,9 @@ public class BloombergProblems {
 		for (int i = 0; i < s.length(); i++) {
 			counts[s.charAt(i) - 'a']++;
 		}
-		
+
 		for (int i = 0; i < s.length(); i++) {
-			if(counts[s.charAt(i) - 'a']  == 1)
+			if (counts[s.charAt(i) - 'a'] == 1)
 				return i;
 		}
 
@@ -190,23 +262,7 @@ public class BloombergProblems {
 	}
 
 	public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-//		List<List<Integer>> result = new ArrayList<List<Integer>>();
-//
-//		if (graph.length == 0)
-//			return result;
-//		else if (graph.length == 1) {
-//			List<Integer> tmp = new ArrayList<Integer>();
-//			tmp.add(0);
-//			result.add(tmp);
-//			return result;
-//		}
-//
-//
-//		List<Integer> tmp = new ArrayList<Integer>();
-//
-//		addPaths(result, tmp, graph, 0);
-//
-//		return result;
+
 
 		List<List<Integer>> result = new ArrayList<List<Integer>>();
 		addPaths(result, new ArrayList<Integer>(), graph, 0);
@@ -216,12 +272,6 @@ public class BloombergProblems {
 //	Input: [[1,2], [3], [3], []] 
 	// Output: [[0,1,3],[0,2,3]]
 	public void addPaths(List<List<Integer>> result, List<Integer> tmp, int[][] graph, int index) {
-//		if (tmp.size() > 1 && tmp.get(tmp.size() - 1) == graph.length - 1) {
-//			result.add(tmp);
-//			return;
-//		} else if (graph[index].length == 0) {
-//			return;
-//		}
 
 		tmp.add(index);
 		if (index == graph.length - 1)
