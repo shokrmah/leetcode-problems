@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainProgram {
@@ -106,10 +107,52 @@ public class MainProgram {
 //		tn.right.right = new TreeNode(7);
 
 		//System.out.println(bp.dieSimulator(2, new int[] { 1, 1, 2, 2, 2, 3 }));
-		List<String> s = new ArrayList<String>();
-		s.add("leet");
-		s.add("code");
-		System.out.println(bp.wordBreak("leetcode", s));
+//		List<String> s = new ArrayList<String>();
+//		s.add("leet");
+//		s.add("code");
+//		System.out.println(bp.wordBreak("leetcode", s));
+		
+		Problems p = new Problems();
+		//System.out.println(p.reverseBits(4294967293)); 
+		
+		//RandomProblems rp = new RandomProblems();
+		//System.out.println(rp.getKth(1, 1000, 777));
+		//rp.sortColors(new int []{2,0,2,1,1,0});
+
+		
+		//System.out.println(p.nextGreaterElement(1999999999));
+		
+		//System.out.println(p.isBalanced("]{{({[{]}[[)]]}{}))}{){({]]}{]([)({{[]){)]{}){){}()})(]]{{])(])[]}][[()()}"));
+
+		//System.out.println(p.orangesRotting(new int[][]{{2,1,1},{1,1,0},{0,1,1}}));
+		
+//		List<PairString> pairs = Arrays.asList( //
+//				new PairString("item1", "item2"), // -> item1, item3, item2
+//				new PairString("item3", "item4"), //
+//				new PairString("item5", "item6") //
+//		);
+//		
+//		List<String> r = p.largestItemAssociation(pairs);
+//		
+//		for (String string : r) {
+//			System.out.println(string);
+//		}
+		
+
+		//String[] a1 = new String[]{ "banana", "orange", "banana","apple", "apple"};
+		//String[] a1 = new String[]{"orange", "apple", "apple", "banana", "orange", "banana"};
+		//String[] a1 = new String[] {"apple", "banana", "apple", "banana", "orange", "banana"};
+//		String[] a1 = new String[] {"apple", "apple", "apple","apple", "apple","banana"};
+//		List<String> l1 =Arrays.asList(a1);
+//		
+//		String[] a2 = new String[] {"apple", "apple"};
+//		//String[] a3 = new String[] {"banana", "anything", "banana"};
+//		String[] a3 = new String[] {"apple", "apple", "banana"};
+//		List<List<String>> l2= new ArrayList<List<String>>();
+//		l2.add(Arrays.asList(a2));
+//		l2.add(Arrays.asList(a3));
+//		
+//		System.out.println(p.isWinner(l2,l1)); 
 	}
 
 }

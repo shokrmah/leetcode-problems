@@ -272,7 +272,6 @@ public class BloombergProblems {
 //	Input: [[1,2], [3], [3], []] 
 	// Output: [[0,1,3],[0,2,3]]
 	public void addPaths(List<List<Integer>> result, List<Integer> tmp, int[][] graph, int index) {
-
 		tmp.add(index);
 		if (index == graph.length - 1)
 			result.add(new ArrayList<Integer>(tmp));
@@ -280,7 +279,6 @@ public class BloombergProblems {
 		for (int i = 0; i < graph[index].length; i++) {
 			addPaths(result, tmp, graph, graph[index][i]);
 		}
-
 		tmp.remove(tmp.size() - 1);
 	}
 

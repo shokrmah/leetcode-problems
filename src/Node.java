@@ -3,6 +3,11 @@ import java.util.List;
 public class Node {
 	public int val;
 	
+	public Node left;
+	public Node right;
+	public int data;
+	
+	
 	public Node prev;
     public Node next;
     public Node child;
