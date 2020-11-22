@@ -10,8 +10,166 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
-
 public class AmazonPrepare {
+
+	public int lastStoneWeightII(int[] stones) {
+		if (stones == null)
+			return 0;
+
+		int[] counts = new int[101];
+		for (int i = 0; i < stones.length; i++) {
+			counts[stones[i]]++;
+		}
+
+		int weight = 0;
+		int val1 = 0;
+		int val2 = 0;
+		for (int i = counts.length - 1; i > 0; i--) {
+			if (counts[i] > 0) {
+				if (val1 == 0) {
+					val1 = i;
+					counts[i]--;
+					i = i + 1;
+				}
+
+				else {
+					val2 = i;
+					counts[i]--;
+					i = i + 1;
+				}
+			}
+
+			if (val1 != 0 && val2 != 0) {
+				weight = val1 - val2;
+				counts[weight]++;
+				val1 = 0;
+				val2 = 0;
+				if (weight > i)
+					i = weight + 1;
+				else
+					i = i + 1;
+			}
+		}
+
+		if (weight > 0)
+			return weight;
+
+		return val1;
+	}
+
+	public int minimumSwap(String s1, String s2) {
+		if (s1 == null || s2 == null || s1.length() != s2.length())
+			return -1;
+
+		int leftXCount = 0;
+		int leftYCount = 0;
+
+		int rightXCount = 0;
+		int rightYCount = 0;
+
+		int swapCount = 0;
+
+		int leftXWrong = 0;
+		int leftYWrong = 0;
+
+		for (int i = 0; i < s1.length(); i++) {
+			if (s1.charAt(i) == 'x')
+				leftXCount++;
+			else
+				leftYCount++;
+
+			if (s2.charAt(i) == 'x')
+				rightXCount++;
+			else
+				rightYCount++;
+
+			if (s1.charAt(i) != s2.charAt(i)) {
+				if (s1.charAt(i) == 'x')
+					leftXWrong++;
+				else
+					leftYWrong++;
+			}
+		}
+
+		if ((leftXCount + rightXCount) % 2 != 0 || (leftYCount + rightYCount) % 2 != 0)
+			return -1;
+
+		if (leftXWrong == leftYWrong)
+			return leftXWrong / 2;
+
+		return swapCount;
+
+	}
+
+	public int lengthOfLongestSubstring(String s) {
+		if (s == null || s.length() == 0)
+			return 0;
+
+		int globalLongest = 0;
+		int localLongest = 0;
+
+		// Map<Character, Integer> indeces = new HashMap<Character, Integer>();
+		int[] indeces = new int[128];
+		for (int i = 0; i < indeces.length; i++) {
+			indeces[i] = -1;
+		}
+		int currentStartIndex = 0;
+
+		char c;
+		for (int i = 0; i < s.length(); i++) {
+			c = s.charAt(i);
+			if (indeces[c] > -1) {
+				// int index = indeces.get(c);
+				if (indeces[c] >= currentStartIndex) {
+					localLongest = i - currentStartIndex;
+					if (localLongest > globalLongest) {
+						globalLongest = localLongest;
+					}
+					currentStartIndex = indeces[c] + 1;
+				}
+
+			}
+			indeces[c] = i;
+		}
+		localLongest = s.length() - currentStartIndex;
+		if (localLongest > globalLongest)
+			globalLongest = localLongest;
+
+		return globalLongest;
+	}
+
+//	static int deletionDistance(String str1, String str2) {
+//	    // your code goes here
+//		if(str1 == null && str2 == null)
+//			return 0;
+//		
+//		if(str1 == null)
+//			return str2.length();
+//		
+//		if(str2 == null)
+//			return str1.length();
+//		
+//		
+//	    int[] str1Chars = new int[26];
+//	    int[] str2Chars = new int[26];
+//	    for(int i=0; i<str1.length(); i++) {
+//	    	str1Chars[str1.charAt(i) - 'a'] ++;
+//	    }
+//	    
+//	    for(int i=0; i<str2.length(); i++) {
+//	    	str2Chars[str2.charAt(i) - 'a'] ++;
+//	    }
+//	    
+//	    int count = 0;
+//	    
+//	    for (int i = 0; i < str1Chars.length; i++) {
+//			count = count + Math.abs(str1Chars[i] - str2Chars[i]);
+//		}
+//	    
+//	    return count;
+//	    
+//	  }
+
 	public int isWinner(List<List<String>> codeList, List<String> order) {
 		if (codeList == null || codeList.size() == 0)
 			return 1;
@@ -36,20 +194,19 @@ public class AmazonPrepare {
 						listTwoIndex = 0;
 					}
 					if (listOneIndex < codeList.size()) {
-						//inject here that I can add to queue
-						
+						// inject here that I can add to queue
+
 						if (codeList.get(listOneIndex).get(listTwoIndex) == order.get(k)
 								|| codeList.get(listOneIndex).get(listTwoIndex).equals("anything")) {
 							k++;
 							listTwoIndex++;
-							if(k == order.size() && listOneIndex == codeList.size() - 1 && listTwoIndex == codeList.get(listOneIndex).size())
+							if (k == order.size() && listOneIndex == codeList.size() - 1
+									&& listTwoIndex == codeList.get(listOneIndex).size())
 								return 1;
-						}
-						else 
+						} else
 							break;
 
-					}
-					else 
+					} else
 						return 1;
 				}
 			}
