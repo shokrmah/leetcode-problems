@@ -16,21 +16,282 @@ import java.util.stream.Stream;
 
 public class Az2020 {
 
+	public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+
+		List<Integer> list1 = leaves(root1);
+		List<Integer> list2 = leaves(root2);
+
+		if (list1.size() != list2.size())
+			return false;
+
+		for (int i = 0; i < list1.size(); i++) {
+			
+			if (list1.get(i) != list2.get(i))
+				return false;
+		}
+		return true;
+	}
+
+	private List<Integer> leaves(TreeNode root) {
+		List<Integer> myList = new ArrayList<Integer>();
+
+		Stack<TreeNode> stack = new Stack<TreeNode>();
+		stack.add(root);
+
+		TreeNode tmpNode = null;
+
+		while (!stack.isEmpty()) {
+			tmpNode = stack.pop();
+
+			if (tmpNode.left == null && tmpNode.right == null)
+				myList.add(tmpNode.val);
+
+			else {
+
+				if (tmpNode.right != null) {
+					stack.add(tmpNode.right);
+				}
+
+				if (tmpNode.left != null) {
+					stack.add(tmpNode.left);
+				}
+			}
+		}
+
+		return myList;
+	}
+
+	public TreeNode increasingBST(TreeNode root) {
+		if (root == null)
+			return null;
+
+		Queue<TreeNode> myQueue = new LinkedList<TreeNode>();
+
+		addToQueue(root, myQueue);
+
+		TreeNode newRoot = new TreeNode(myQueue.poll().val);
+
+		TreeNode tmpNode = newRoot;
+		while (!myQueue.isEmpty()) {
+			tmpNode.right = new TreeNode(myQueue.poll().val);
+			tmpNode = tmpNode.right;
+		}
+
+		return newRoot;
+
+	}
+
+	private void addToQueue(TreeNode root, Queue<TreeNode> myQueue) {
+		if (root.left != null)
+			addToQueue(root.left, myQueue);
+
+		System.out.println(root.val);
+		myQueue.add(root);
+
+		if (root.right != null)
+			addToQueue(root.right, myQueue);
+	}
+
+	public int rangeSumBST(TreeNode root, int low, int high) {
+		if (root == null)
+			return 0;
+
+		if (root.val > low && root.val <= high)
+			return root.val + rangeSumBST(root.right, low, high) + rangeSumBST(root.left, low, high);
+
+		if (root.val <= low)
+			return rangeSumBST(root.right, low, high);
+
+		return rangeSumBST(root.left, low, high);
+	}
+
+//	private int sumRange(TreeNode root, int low, int high) {
+//		if (root == null)
+//			return 0;
+//
+//		if (root.val > low && root.val <= high)
+//			return root.val + sumRange(root.right, low, high) + sumRange(root.left, low, high);
+//		
+//		if(root.val <= low)
+//			return sumRange(root.right, low, high);
+//		
+//		return sumRange(root.left, low, high);
+//
+//	}
+
+	public int networkDelayTime(int[][] times, int N, int K) {
+		if (times == null || times.length == 0)
+			return 0;
+
+		int totalTime = 0;
+
+		Map<Integer, Map<Integer, Integer>> timeMap = new HashMap<Integer, Map<Integer, Integer>>();
+		for (int i = 0; i < times.length; i++) {
+			timeMap.putIfAbsent(times[i][0], new HashMap<Integer, Integer>());
+			timeMap.get(times[i][0]).put(times[i][1], times[i][2]);
+		}
+
+		Map<Integer, Integer> visitingTime = new HashMap<Integer, Integer>();
+
+		Queue<Integer> bfsQueue = new LinkedList<Integer>();
+		bfsQueue.add(K);
+		visitingTime.put(K, 0);
+
+		int tmpValue = -1;
+		int size = 0;
+		int currentTime = 0;
+		int tmpTime = 0;
+
+		int cycleTime = 0;
+		while (!bfsQueue.isEmpty()) {
+			size = bfsQueue.size();
+			cycleTime = 0;
+			for (int i = 0; i < size; i++) {
+				tmpValue = bfsQueue.poll();
+				currentTime = visitingTime.get(tmpValue);
+
+				if (timeMap.containsKey(tmpValue))
+					for (Map.Entry<Integer, Integer> entry : timeMap.get(tmpValue).entrySet()) {
+						tmpTime = entry.getValue();
+						if (visitingTime.containsKey(entry.getKey())) {
+							// totalTime = totalTime - visitingTime.get(entry.getKey());
+							tmpTime = Math.min(totalTime + tmpTime, visitingTime.get(entry.getKey()));
+							visitingTime.put(entry.getKey(), tmpTime);
+
+						} else {
+
+							visitingTime.put(entry.getKey(), tmpTime);
+							bfsQueue.add(entry.getKey());
+
+						}
+						cycleTime = Math.max(cycleTime, tmpTime);
+					}
+
+			}
+
+			totalTime = totalTime + cycleTime;
+		}
+
+		if (visitingTime.size() < N)
+			return -1;
+
+		return totalTime;
+	}
+
+	public String reorganizeString(String S) {
+		if (S == null || S.length() == 0)
+			return "";
+
+		StringBuilder sb = new StringBuilder();
+
+		int[] counts = new int[26];
+		for (int i = 0; i < S.length(); i++) {
+			counts[S.charAt(i) - 'a']++;
+		}
+
+		Queue<PairCharInt> pq = new PriorityQueue<PairCharInt>();
+		int maxCount = (S.length() + 1) / 2;
+		for (int i = 0; i < counts.length; i++) {
+			if (counts[i] == 0)
+				continue;
+			if (counts[i] > maxCount)
+				return "";
+
+			int c = 'a' + i;
+			pq.add(new PairCharInt((char) c, counts[i]));
+		}
+
+		PairCharInt c1, c2;
+		while (pq.size() > 1) {
+			c1 = pq.poll();
+			c2 = pq.poll();
+
+			sb.append(c1.c);
+			sb.append(c2.c);
+			c1.count--;
+			c2.count--;
+			if (c1.count > 0)
+				pq.add(c1);
+
+			if (c2.count > 0)
+				pq.add(c2);
+		}
+
+		if (pq.size() > 0) {
+			c1 = pq.poll();
+			if (c1.count > 1)
+				return "";
+
+			sb.append(c1.c);
+		}
+
+		return sb.toString();
+
+	}
+
+	public class PairStringInt implements Comparable<PairStringInt> {
+		String word;
+		int count;
+
+		public PairStringInt(String word, int count) {
+			this.word = word;
+			this.count = count;
+		}
+
+		@Override
+		public int compareTo(PairStringInt psi) {
+			int compare = this.count - psi.count;
+			if (compare == 0)
+				compare = this.word.compareTo(psi.word);
+
+			return compare;
+		}
+
+	}
+
+	public List<String> topKFrequent(String[] words, int k) {
+		List<String> topWords = new ArrayList<String>();
+
+		if (words == null || words.length == 0 || k <= 0)
+			return topWords;
+
+		Map<String, PairStringInt> wordsCounts = new HashMap<String, PairStringInt>();
+
+		for (int i = 0; i < words.length; i++) {
+			wordsCounts.putIfAbsent(words[i], new PairStringInt(words[i], 0));
+			wordsCounts.get(words[i]).count++;
+		}
+
+		Queue<PairStringInt> pq = new PriorityQueue<PairStringInt>();
+
+		for (Map.Entry<String, PairStringInt> entry : wordsCounts.entrySet()) {
+			pq.add(entry.getValue());
+			if (pq.size() > k)
+				pq.poll();
+		}
+
+		while (!pq.isEmpty()) {
+			topWords.add(pq.poll().word);
+		}
+
+		return topWords;
+	}
+
 	public int furthestBuilding(int[] heights, int bricks, int ladders) {
-		 PriorityQueue<Integer> queue = new PriorityQueue<Integer>();
-	        for(int i = 0; i < heights.length - 1; i++){
-	            int diff = heights[i + 1] - heights[i];
-	            if(diff > 0) {                      // Current building's height is less than the next building's height.
-	                queue.add(diff);                // Use ladder and add the difference.
-	                if(queue.size() > ladders) {    // If you ran out of ladders!
-	                    bricks -= queue.poll();     // Remove the smallest difference and use bricks instead
-	                    if(bricks < 0) {            
-	                        return i;               // Ops you ran out of the bricks and you stop here!
-	                    }
-	                }
-	            }
-	        }
-	        return heights.length - 1;
+		PriorityQueue<Integer> queue = new PriorityQueue<Integer>();
+		for (int i = 0; i < heights.length - 1; i++) {
+			int diff = heights[i + 1] - heights[i];
+			if (diff > 0) { // Current building's height is less than the next building's height.
+				queue.add(diff); // Use ladder and add the difference.
+				if (queue.size() > ladders) { // If you ran out of ladders!
+					bricks -= queue.poll(); // Remove the smallest difference and use bricks instead
+					if (bricks < 0) {
+						return i; // Ops you ran out of the bricks and you stop here!
+					}
+				}
+			}
+		}
+		return heights.length - 1;
 	}
 
 	public int kthSmallest(int[][] matrix, int k) {
