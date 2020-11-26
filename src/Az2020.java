@@ -16,6 +16,120 @@ import java.util.stream.Stream;
 
 public class Az2020 {
 
+	public boolean hasPathSum(TreeNode root, int sum) {
+
+		return checkPathSum(root, 0, sum);	
+	}
+
+	private boolean checkPathSum(TreeNode node, int sum, int targetSum) {
+		if (node == null)
+            return false;
+        
+		sum = sum + node.val;
+        
+		if (sum == targetSum && node.left == null && node.right == null)
+            return true;
+        return  checkPathSum(node.left, sum, targetSum) ||
+        		checkPathSum(node.right, sum, targetSum);
+
+	}
+
+	public List<String> binaryTreePaths(TreeNode root) {
+		List<List<Integer>> myLists = new ArrayList<List<Integer>>();
+
+		if (root == null)
+			return new ArrayList<String>();
+		myLists.add(new ArrayList<Integer>());
+		calculatePaths(root, myLists, 0);
+
+		StringBuilder sb = new StringBuilder();
+		List<String> result = new ArrayList<String>();
+		for (int i = myLists.size() - 1; i >= 1; i--) {
+			for (int j = 0; j < myLists.get(i).size(); j++) {
+				sb.append(myLists.get(i).get(j));
+				if (j < myLists.get(i).size() - 1)
+					sb.append("->");
+			}
+
+			result.add(sb.toString());
+			sb.setLength(0);
+		}
+
+		return result;
+	}
+
+	private void calculatePaths(TreeNode node, List<List<Integer>> myLists, int listIndex) {
+		myLists.get(listIndex).add(node.val);
+
+		if (node.left != null)
+			calculatePaths(node.left, myLists, listIndex);
+
+		if (node.right != null)
+			calculatePaths(node.right, myLists, listIndex);
+
+		if (node.left == null && node.right == null) {
+			copyList(myLists, listIndex);
+			// listIndex++;
+		}
+
+		myLists.get(listIndex).remove(myLists.get(listIndex).size() - 1);
+
+	}
+
+	private void copyList(List<List<Integer>> myLists, int index) {
+		myLists.add(new ArrayList<Integer>());
+		int index2 = myLists.size() - 1;
+		for (int i = 0; i < myLists.get(index).size(); i++) {
+			myLists.get(index2).add(myLists.get(index).get(i));
+		}
+	}
+
+	public boolean isSameTree(TreeNode p, TreeNode q) {
+
+		if (p == null && q == null)
+			return true;
+
+		if (p == null || q == null)
+			return false;
+
+		if (p.val != q.val)
+			return false;
+
+		else
+			return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+
+	}
+
+	public int getImportanceDFS(List<Employee> employees, int id) {
+		if (employees == null || employees.size() == 0)
+			return 0;
+
+		int totalImportance = 0;
+
+		Stack<Employee> dfsStack = new Stack<Employee>();
+
+		Map<Integer, Employee> myMap = new HashMap<Integer, Employee>();
+		for (int i = 0; i < employees.size(); i++) {
+			myMap.put(employees.get(i).id, employees.get(i));
+		}
+
+		dfsStack.push(myMap.get(id));
+
+		Employee tmpEmployee;
+
+		while (!dfsStack.isEmpty()) {
+			tmpEmployee = dfsStack.pop();
+			totalImportance = totalImportance + tmpEmployee.importance;
+
+			for (int i = 0; i < tmpEmployee.subordinates.size(); i++) {
+				dfsStack.push(myMap.get(tmpEmployee.subordinates.get(i)));
+			}
+
+		}
+
+		return totalImportance;
+	}
+
 	public boolean leafSimilar(TreeNode root1, TreeNode root2) {
 
 		List<Integer> list1 = leaves(root1);
@@ -25,7 +139,7 @@ public class Az2020 {
 			return false;
 
 		for (int i = 0; i < list1.size(); i++) {
-			
+
 			if (list1.get(i) != list2.get(i))
 				return false;
 		}
