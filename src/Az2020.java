@@ -16,21 +16,82 @@ import java.util.stream.Stream;
 
 public class Az2020 {
 
+	public int minCostToMoveChips(int[] position) {
+		if (position == null || position.length == 0)
+			return 0;
+
+		int minCost = 0;
+
+		
+
+		return minCost;
+	}
+
+	public ListNode mergeKLists(ListNode[] lists) {
+		if (lists.length == 0)
+			return null;
+
+		ListNode top = new ListNode();
+
+		int[] valueCount = new int[2];
+
+		ListNode tmp = top;
+
+		while (compareLists(lists, valueCount)) {
+			for (int i = 0; i < valueCount[1]; i++) {
+				tmp.next = new ListNode(valueCount[0]);
+				tmp = tmp.next;
+			}
+		}
+
+		return top.next;
+
+	}
+
+	private boolean compareLists(ListNode[] lists, int[] valueCount) {
+		int smallestValue = Integer.MAX_VALUE;
+		List<Integer> indexes = new ArrayList<Integer>();
+		int finished = 0;
+		for (int i = 0; i < lists.length; i++) {
+			if (lists[i] != null) {
+				if (lists[i].val < smallestValue) {
+					indexes.clear();
+					smallestValue = lists[i].val;
+					indexes.add(i);
+				} else if (lists[i].val == smallestValue)
+					indexes.add(i);
+			} else {
+				finished++;
+			}
+		}
+
+		for (int i = 0; i < indexes.size(); i++) {
+			lists[indexes.get(i)] = lists[indexes.get(i)].next;
+		}
+
+		if (finished == lists.length)
+			return false;
+
+		valueCount[0] = smallestValue;
+		valueCount[1] = indexes.size();
+
+		return true;
+	}
+
 	public boolean hasPathSum(TreeNode root, int sum) {
 
-		return checkPathSum(root, 0, sum);	
+		return checkPathSum(root, 0, sum);
 	}
 
 	private boolean checkPathSum(TreeNode node, int sum, int targetSum) {
 		if (node == null)
-            return false;
-        
+			return false;
+
 		sum = sum + node.val;
-        
+
 		if (sum == targetSum && node.left == null && node.right == null)
-            return true;
-        return  checkPathSum(node.left, sum, targetSum) ||
-        		checkPathSum(node.right, sum, targetSum);
+			return true;
+		return checkPathSum(node.left, sum, targetSum) || checkPathSum(node.right, sum, targetSum);
 
 	}
 
