@@ -17,35 +17,35 @@ import java.util.Stack;
 
 public class Problems {
 
-	public TreeNode insertIntoBST(TreeNode root, int val) {
-		if (root == null) {
-			return new TreeNode(val);
-		}
+//	Given a array of numbers representing the stock prices of a company in 
+	//chronological order, write a function that calculates the maximum 
+//	profit you could have made from buying and selling that stock once. 
+	//You must buy before you can sell it. 
+//
+//	For example, given [9, 11, 8, 5, 7, 10], you should return 5, 
+	//since you could buy the stock at 5 dollars and sell it at 10 dollars. 
 
-		TreeNode node = root;
-
-		while (node != null) {
-			if (val < node.val) {
-				if(node.left == null) {
-					node.left = new TreeNode(val);
-					break;
-				}
-				else
-					node = node.left;
-			}
-			else {
-				if(node.right == null) {
-					node.right = new TreeNode(val);
-					break;
-				}
-				else
-					node = node.right;
-			}
-		}
+	public int maxProfit(int [] stockValues) {
+		if(stockValues == null || stockValues.length == 0)
+			return 0;
 		
-		return root;
-	}
+		int maxProfitUntilNow = -1;
+		int maxProfitUntilhere = 0;
 
+		for (int i = 1; i < stockValues.length; i++) {
+			maxProfitUntilhere = maxProfitUntilhere + stockValues[i] - stockValues[i - 1];
+			if (maxProfitUntilNow < maxProfitUntilhere)
+				maxProfitUntilNow = maxProfitUntilhere;
+			if (maxProfitUntilhere < 0)
+				maxProfitUntilhere = 0;
+		}
+
+		return maxProfitUntilNow;
+		
+	}
+	
+	
+	
 	public int[] findErrorNums(int[] nums) {
 		int[] count = new int[nums.length + 1];
 		int dup = 0;
@@ -92,6 +92,116 @@ public class Problems {
 
 		return mostLeftVal;
 	}
+	
+	
+//	Given a sorted array of strings that is interspersed with empty springs, write a function to find the location of a given string.
+//
+//	Example:
+//	Input: ball, {“at”, “”, “”, “”, “ball”, “”, “”, “car”, “”, “”, “dad”,””, “”}
+//	Output: 4
+//	Given a sorted array of strings that is interspersed with empty springs, write a function to find the location of a given string.
+
+	public int findString(String[] words, String key) {
+
+//		for (int i = 0; i < words.length; i++) {
+//			if (words[i].equals(key)) {
+//				return i;
+//			}
+//		}
+//
+//		return -1;
+		
+		return binarySearchWord(words, key, 0, words.length - 1);
+	}
+
+	public int binarySearchWord(String[] words, String key, int startIndex, int endIndex) {
+		if (startIndex > endIndex)
+			return -1;
+
+		int keyIndex = (startIndex + endIndex) / 2;
+
+		if (words[keyIndex].equals(key))
+			return keyIndex;
+		else if (words[keyIndex].length() == 0) {
+			// loop to the left
+			boolean isFoundNewIndex = false;
+			for (int i = keyIndex - 1; i >= startIndex; i--) {
+				if (words[i].length() != 0) {
+					if (words[i].equals(key))
+						return i;
+					else {
+						keyIndex = i;
+						isFoundNewIndex = true;
+						break;
+					}
+
+				}
+			}
+			if (!isFoundNewIndex) {
+				for (int i = keyIndex + 1; i < endIndex; i++) {
+					if (words[i].length() != 0) {
+						if (words[i].equals(key))
+							return i;
+						else {
+							keyIndex = i;
+							isFoundNewIndex = true;
+							break;
+						}
+
+					}
+
+				}
+				if (!isFoundNewIndex)
+					return -1;
+
+			}
+		}
+		
+		if(compareString(words[keyIndex], key) == 1) {
+			return binarySearchWord(words, key, startIndex, keyIndex - 1);
+		}
+		else
+			return binarySearchWord(words, key, keyIndex + 1, endIndex);
+
+	}
+	
+	public int compareString(String word, String Key) {
+		for (int i = 0; i < word.length(); i++) {
+			if(word.charAt(i) < Key.charAt(i))
+				return -1;
+			else if(word.charAt(i) > Key.charAt(i))
+				return 1;
+		}
+		return 0;
+	}
+
+	public TreeNode insertIntoBST(TreeNode root, int val) {
+		if (root == null) {
+			return new TreeNode(val);
+		}
+
+		TreeNode node = root;
+
+		while (node != null) {
+			if (val < node.val) {
+				if (node.left == null) {
+					node.left = new TreeNode(val);
+					break;
+				} else
+					node = node.left;
+			} else {
+				if (node.right == null) {
+					node.right = new TreeNode(val);
+					break;
+				} else
+					node = node.right;
+			}
+		}
+
+		return root;
+	}
+
+
 
 	public int maxNumberOfBalloons(String text) {
 		int[] counts = new int[26];
@@ -855,7 +965,7 @@ public class Problems {
 		return result;
 	}
 
-	public int maxProfit(int[] prices) {
+	public int maxProfit2(int[] prices) {
 		if (prices.length == 0 || prices.length == 1)
 			return 0;
 

@@ -7,6 +7,7 @@ public class Node {
     public Node next;
     public Node child;
     public Node random;
+    public List<Node> neighbors;
 	
     public List<Node> children;
 
