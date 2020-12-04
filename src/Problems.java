@@ -25,6 +25,130 @@ public class Problems {
 //	For example, given [9, 11, 8, 5, 7, 10], you should return 5, 
 	//since you could buy the stock at 5 dollars and sell it at 10 dollars. 
 
+	// 1254
+
+	// 4532
+
+	public int nextGreaterElement(int n) {
+		if (n <= 0)
+			return -1;
+
+		Integer[] numbers = new Integer[(int) (Math.log10(n) + 1)];
+
+		int digit = 0;
+		int tmpN = n;
+		int index = 0;
+		while (tmpN > 0) {
+			digit = tmpN % 10;
+			tmpN = tmpN / 10;
+			numbers[index++] = digit;
+		}
+
+		int currentEnd = 1;
+		while (currentEnd < numbers.length) {
+			int result = greaterInteger(numbers, currentEnd);
+			if (result > n)
+				return result;
+
+			currentEnd++;
+		}
+
+		return -1;
+
+	}
+
+	public int greaterInteger(Integer[] numbers, int endIndex) {
+		int value = -1;
+		int index1 = -1;
+		int index2 = -1;
+		for (int i = 0; i <= endIndex; i++) {
+			value = numbers[i];
+			for (int j = i + 1; j <= endIndex; j++) {
+				if (numbers[j] < value) {
+					index1 = i;
+					index2 = j;
+					break;
+				}
+
+			}
+			if (index1 != -1)
+				break;
+		}
+
+		if (index1 == -1)
+			return -1;
+		else {
+			int tmp = numbers[index1];
+			numbers[index1] = numbers[index2];
+			numbers[index2] = tmp;
+
+			Arrays.sort(numbers, 0, index2, Collections.reverseOrder());
+			StringBuilder sb = new StringBuilder();
+			for (int i = numbers.length - 1; i >= 0; i--) {
+				sb.append(numbers[i]);
+			}
+
+			try {
+				int result = Integer.parseInt(sb.toString());
+				return result;
+			} catch (NumberFormatException e) {
+				return -1;
+			}
+
+		}
+	}
+
+	public int reverseBits(int n) {
+
+		char[] binary = Integer.toBinaryString(n).toCharArray();
+
+		int i = 0;
+		int j = binary.length - 1;
+
+		char c;
+		while (i < j) {
+			c = binary[i];
+			binary[i] = binary[j];
+			binary[j] = c;
+			i++;
+			j--;
+		}
+
+		String result = new String(binary);
+
+		return Integer.parseInt(result, 2);
+	}
+
+	public int[] twoSumSorted(int[] numbers, int target) {
+		// still this solltion works twoSum
+
+		int i = 0;
+		int j = numbers.length - 1;
+		while (i < j) {
+			if (numbers[i] + numbers[j] == target)
+				return new int[] { i + 1, j + 1 };
+			else if (numbers[i] + numbers[j] > target)
+				j--;
+			else
+				i++;
+		}
+
+		return null;
+	}
+
+	public int[] twoSum(int[] nums, int target) {
+
+		Map<Integer, Integer> myIndices = new HashMap<Integer, Integer>();
+
+		for (int i = 0; i < nums.length; i++) {
+			if (myIndices.containsKey((target - nums[i])))
+				return new int[] { myIndices.get(target - nums[i]), i };
+			else
+				myIndices.put(nums[i], i);
+		}
+		return null;
+	}
+
 	public int maxProfit(int [] stockValues) {
 		if(stockValues == null || stockValues.length == 0)
 			return 0;
@@ -42,7 +166,7 @@ public class Problems {
 
 		return maxProfitUntilNow;
 		
-	}
+			}
 	
 	
 	
@@ -2628,1109 +2752,7 @@ public class Problems {
 
 	}
 
-	public int countCharacters(String[] words, String chars) {
-		int charsCount = 0;
-
-		int[] referenceChars = new int[26];
-
-		for (char c : chars.toCharArray()) {
-			referenceChars[c - 'a']++;
-		}
-
-		int[] loopingMap = new int[26];
-
-		System.arraycopy(referenceChars, 0, loopingMap, 0, 26);
-
-		boolean isOK = true;
-		for (int i = 0; i < words.length; i++) {
-			if (words[i].length() > chars.length())
-				continue;
-
-			isOK = true;
-			for (char c : words[i].toCharArray()) {
-				if (loopingMap[c - 'a'] > 0) {
-					loopingMap[c - 'a']--;
-				} else {
-					isOK = false;
-					break;
-				}
-
-			}
-			if (isOK)
-				charsCount = charsCount + words[i].length();
-
-			System.arraycopy(referenceChars, 0, loopingMap, 0, 26);
-		}
-
-		return charsCount;
-	}
-
-	public List<List<Integer>> findSolution(CustomFunction customfunction, int z) {
-
-		List<List<Integer>> results = new ArrayList<List<Integer>>();
-
-		int value = 0;
-		for (int x = 1; x <= z; x++) {
-			for (int y = 1; y <= z; y++) {
-				value = customfunction.f(x, y);
-				if (value == z) {
-					ArrayList<Integer> a1 = new ArrayList<Integer>();
-					a1.add(x);
-					a1.add(y);
-					results.add(a1);
-				} else if (value > z)
-					break;
-			}
-
-		}
-
-		return results;
-	}
-
-	public int heightChecker(int[] heights) {
-		if (heights.length == 1)
-			return 0;
-
-		int noOfReorder = 0;
-		int[] tmpArray = new int[heights.length];
-
-		System.arraycopy(heights, 0, tmpArray, 0, heights.length);
-
-		int index = 0;
-
-		Arrays.sort(tmpArray);
-
-		for (int i : tmpArray) {
-			if (heights[index++] != i)
-				noOfReorder++;
-		}
-
-		return noOfReorder;
-
-	}
-
-	public int minDeletionSize(String[] A) {
-
-		if (A.length == 1)
-			return 0;
-
-		int countOfDeletions = 0;
-
-		int noOfChars = A[0].length();
-
-		for (int i = 0; i < noOfChars; i++) {
-			for (int j = 1; j < A.length; j++) {
-				if (A[j].charAt(i) < A[j - 1].charAt(i)) {
-					countOfDeletions++;
-					break;
-				}
-			}
-		}
-
-		return countOfDeletions;
-	}
-
-	public int[] diStringMatch(String S) {
-
-		int size = S.length();
-		int[] result = new int[size + 1];
-
-		int minRef = 0;
-		int maxRef = size;
-
-		int index = 0;
-
-		for (char c : S.toCharArray()) {
-			if (c == 'I') {
-				result[index] = minRef;
-				minRef++;
-				index++;
-			} else {
-				result[index] = maxRef;
-				index++;
-				maxRef--;
-			}
-		}
-
-		result[index] = minRef;
-		return result;
-
-	}
-
-	public int peakIndexInMountainArray(int[] A) {
-
-		for (int i = 1; i < A.length - 1; i++) {
-			if (A[i] > A[i - 1] && A[i] < A[i + 1])
-				return i;
-		}
-		return 0;
-	}
-
-	public boolean canConstruct(String ransomNote, String magazine) {
-		if (ransomNote.length() == 0)
-			return true;
-		if (ransomNote.length() > magazine.length())
-			return false;
-
-		int[] countOfLetters = new int[26];
-
-		for (char c : magazine.toCharArray()) {
-			countOfLetters[c - 'a'] = countOfLetters[c - 'a'] + 1;
-		}
-
-		for (char c : ransomNote.toCharArray()) {
-			countOfLetters[c - 'a'] = countOfLetters[c - 'a'] - 1;
-			if (countOfLetters[c - 'a'] == -1)
-				return false;
-		}
-		return true;
-	}
-
-	public String toLowerCase(String str) {
-		if (str == null || str.length() == 0)
-			return str;
-
-		StringBuilder sb = new StringBuilder();
-
-		int diff = 'a' - 'A';
-		int smallChar = 0;
-		for (char c : str.toCharArray()) {
-			if (c >= 'A' && c <= 'Z') {
-				smallChar = c + diff;
-				c = (char) smallChar;
-				sb.append(c);
-			}
-
-			else
-				sb.append(c);
-
-		}
-
-		return sb.toString();
-	}
-
-	public int sockMerchant(int n, int[] ar) {
-		int pairs = 0;
-
-		Set<Integer> isInside = new HashSet<Integer>();
-
-		for (int i = 0; i < ar.length; i++) {
-			if (isInside.contains(ar[i])) {
-				pairs++;
-				isInside.remove(ar[i]);
-			} else
-				isInside.add(ar[i]);
-		}
-
-		return pairs;
-	}
-
-	public String reverseWords(String s) {
-		String[] splittedWords = s.split(" ");
-
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < splittedWords.length; i++) {
-			if (i == splittedWords.length - 1)
-				sb.append(reversWord(splittedWords[i]));
-			else
-				sb.append(reversWord(splittedWords[i])).append(" ");
-
-		}
-
-		return sb.toString();
-	}
-
-	public StringBuilder reversWord(String word) {
-		char[] letters = word.toCharArray();
-
-		int i = 0;
-		int j = letters.length - 1;
-		while (i < j) {
-			char tmp = letters[i];
-			letters[i] = letters[j];
-			letters[j] = tmp;
-			i++;
-			j--;
-		}
-		StringBuilder sb = new StringBuilder();
-
-		for (int j2 = 0; j2 < letters.length; j2++) {
-			sb.append(letters[j2]);
-		}
-
-		return sb;
-	}
-
-	public boolean isUnivalTree(TreeNode root) {
-
-		if (root.left != null && root.right != null)
-			if (root.val != root.left.val || root.val != root.right.val)
-				return false;
-			else
-				return isUnivalTree(root.left) && isUnivalTree(root.right);
-
-		else if (root.left != null)
-			if (root.val != root.left.val)
-				return false;
-			else
-				return isUnivalTree(root.left);
-
-		else if (root.right != null)
-			if (root.val != root.right.val)
-				return false;
-			else
-				return isUnivalTree(root.right);
-
-		return true;
-
-	}
-
-	public int numUniqueEmails(String[] emails) {
-		if (emails.length == 1)
-			return 1;
-
-		Set<String> hashMails = new HashSet<String>();
-		int atIndex = -1;
-		int plusIndex = -1;
-		String start;
-		for (int i = 0; i < emails.length; i++) {
-			atIndex = emails[i].indexOf('@');
-			start = emails[i].substring(0, atIndex).replace(".", "");
-			plusIndex = start.indexOf('+');
-			if (plusIndex != -1)
-				start = start.substring(0, plusIndex);
-			hashMails.add(start + emails[i].substring(atIndex));
-		}
-
-		return hashMails.size();
-	}
-
-	public List<Integer> postorder(Node root) {
-		if (root == null)
-			return new ArrayList<Integer>();
-
-		List<Integer> result = new ArrayList<Integer>();
-		Stack<Node> stack = new Stack<Node>();
-		Stack<Node> resultStack = new Stack<Node>();
-		stack.push(root);
-		resultStack.push(root);
-		Node node;
-		while (!stack.isEmpty()) {
-			node = stack.pop();
-			if (node.children != null)
-				for (int i = node.children.size() - 1; i >= 0; i--) {
-					stack.push(node.children.get(i));
-					resultStack.push(node.children.get(i));
-				}
-		}
-
-		while (!resultStack.isEmpty())
-			result.add(resultStack.pop().val);
-		return result;
-	}
-
-	List<Integer> arrResult = new ArrayList<Integer>();
-
-	public List<Integer> preorder(Node root) {
-		if (root == null)
-			return arrResult;
-
-		arrResult.add(root.val);
-
-		for (int i = 0; i < root.children.size(); i++) {
-			preorder(root.children.get(i));
-		}
-
-		return arrResult;
-
-	}
-
-	public TreeNode searchBST(TreeNode root, int val) {
-		if (root == null)
-			return null;
-
-		if (root.val == val)
-			return root;
-		if (val < root.val)
-			return searchBST(root.left, val);
-		else
-			return searchBST(root.right, val);
-	}
-
-	public int[] plusOne(int[] digits) {
-
-		for (int i = digits.length - 1; i >= 0; i--) {
-			if (digits[i] + 1 < 10) {
-				digits[i] = digits[i] + 1;
-				return digits;
-			} else
-				digits[i] = 0;
-		}
-
-		int[] result = new int[digits.length + 1];
-		System.arraycopy(digits, 0, result, 1, digits.length);
-		result[0] = 1;
-
-		return result;
-	}
-
-	public int arrayPairSum(int[] nums) {
-		if (nums.length == 0)
-			return 0;
-
-		Arrays.sort(nums);
-		int sum = 0;
-		for (int i = 0; i < nums.length; i = i + 2) {
-			sum = sum + nums[i];
-		}
-
-		return sum;
-	}
-
-	public int hammingDistance(int x, int y) {
-		int r = x ^ y;
-		String s = Integer.toBinaryString(r);
-		int count = 0;
-		for (int i = 0; i < s.length(); i++) {
-			if (s.charAt(i) == '1')
-				count++;
-		}
-
-		return count;
-
-	}
-
-	public int[] intersection(int[] nums1, int[] nums2) {
-		if (nums1.length == 0 || nums2.length == 0)
-			return new int[] {};
-
-		HashSet<Integer> repeated = new HashSet<Integer>();
-		HashSet<Integer> result = new HashSet<Integer>();
-		for (int i = 0; i < nums1.length; i++) {
-			repeated.add(nums1[i]);
-		}
-
-		for (int i = 0; i < nums2.length; i++) {
-			if (repeated.contains(nums2[i]))
-				result.add(nums2[i]);
-		}
-
-		int[] arr = new int[result.size()];
-		int i = 0;
-
-		Iterator<Integer> it = result.iterator();
-		while (it.hasNext()) {
-			arr[i] = it.next();
-			i++;
-		}
-
-		return arr;
-
-	}
-
-	public int[] intersect(int[] nums1, int[] nums2) {
-
-		if (nums1.length == 0 || nums2.length == 0)
-			return new int[] {};
-
-		Map<Integer, Integer> counts1 = new HashMap<Integer, Integer>();
-		Map<Integer, Integer> counts2 = new HashMap<Integer, Integer>();
-
-		for (int i = 0; i < nums1.length; i++) {
-			if (counts1.containsKey(nums1[i]))
-				counts1.put(nums1[i], counts1.get(nums1[i]) + 1);
-			else
-				counts1.put(nums1[i], 1);
-		}
-
-		for (int i = 0; i < nums2.length; i++) {
-			if (counts2.containsKey(nums2[i]))
-				counts2.put(nums2[i], counts2.get(nums2[i]) + 1);
-			else
-				counts2.put(nums2[i], 1);
-		}
-
-		List<Integer> result = new ArrayList<Integer>();
-		Iterator it = counts1.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<Integer, Integer> element = (Map.Entry<Integer, Integer>) it.next();
-			int value = 0;
-			if (counts2.containsKey(element.getKey())) {
-				value = Math.min(element.getValue(), counts2.get(element.getKey()));
-				for (int i = 0; i < value; i++) {
-					result.add(element.getKey());
-				}
-			}
-
-		}
-
-		int[] arr = new int[result.size()];
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = result.get(i);
-		}
-
-		return arr;
-
-	}
-
-	public List<String> commonChars(String[] A) {
-
-		Map<Character, Integer> repated = new HashMap<Character, Integer>();
-		Map<Character, Integer> tmpRepated = new HashMap<Character, Integer>();
-
-		List<Character> toRemove = new ArrayList<Character>();
-		for (int i = 0; i < A[0].length(); i++) {
-			if (repated.containsKey(A[0].charAt(i)))
-				repated.put(A[0].charAt(i), repated.get(A[0].charAt(i)) + 1);
-			else
-				repated.put(A[0].charAt(i), 1);
-		}
-
-		for (int i = 1; i < A.length; i++) {
-			for (int j = 0; j < A[i].length(); j++) {
-				if (repated.containsKey(A[i].charAt(j))) {
-					if (tmpRepated.containsKey(A[i].charAt(j)))
-						tmpRepated.put(A[i].charAt(j), tmpRepated.get(A[i].charAt(j)) + 1);
-					else
-						tmpRepated.put(A[i].charAt(j), 1);
-
-				}
-
-			}
-
-			Iterator it = repated.entrySet().iterator();
-			while (it.hasNext()) {
-				Map.Entry entry = (Map.Entry) it.next();
-				if (tmpRepated.containsKey(entry.getKey())) {
-					repated.put((char) entry.getKey(),
-							Math.min((int) entry.getValue(), tmpRepated.get(entry.getKey())));
-				} else
-					toRemove.add((char) entry.getKey());
-				// repated.remove(entry.getKey());
-			}
-			tmpRepated = new HashMap<Character, Integer>();
-			for (int j = 0; j < toRemove.size(); j++) {
-				repated.remove(toRemove.get(j));
-			}
-			toRemove.clear();
-		}
-
-		List<String> result = new ArrayList<String>();
-
-		Iterator it = repated.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			String c = Character.toString((char) entry.getKey());
-			for (int j = 0; j < (int) entry.getValue(); j++) {
-				result.add(c);
-			}
-		}
-
-		return result;
-
-	}
-
-	public boolean uniqueOccurrences(int[] arr) {
-		if (arr.length == 1)
-			return true;
-
-		Map<Integer, Integer> occur = new HashMap<Integer, Integer>();
-
-		for (int i = 0; i < arr.length; i++) {
-			if (occur.containsKey(arr[i]))
-				occur.put(arr[i], occur.get(arr[i]) + 1);
-			else
-				occur.put(arr[i], 1);
-		}
-
-		HashSet<Integer> repeated = new HashSet<Integer>();
-
-		Iterator it = occur.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry element = (Map.Entry) it.next();
-			int val = (int) element.getValue();
-			if (repeated.contains(val))
-				return false;
-			else
-				repeated.add(val);
-		}
-
-		return true;
-
-	}
-
-	public TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
-		if (t1 == null)
-			return t2;
-		if (t2 == null)
-			return t1;
-
-		t1.val = t1.val + t2.val;
-		t1.left = mergeTrees(t1.left, t2.left);
-		t1.right = mergeTrees(t1.right, t2.right);
-		return t1;
-
-	}
-
-	public boolean checkPerfectNumber(int num) {
-
-		if (num == 1)
-			return false;
-
-		int sqrt = (int) Math.sqrt(num);
-
-		int sum = 1;
-
-		for (int i = 2; i <= sqrt; i++) {
-			if (num % i == 0) {
-				sum = sum + i + (num / i);
-			}
-		}
-
-		return (sum == num);
-	}
-
-	public List<Integer> selfDividingNumbers(int left, int right) {
-
-		List<Integer> result = new ArrayList<Integer>();
-
-		int current = 0;
-		boolean isValid = true;
-		while (left <= right) {
-			current = left;
-			isValid = true;
-			while (current > 0) {
-				if ((current % 10) == 0 || left % (current % 10) != 0) {
-					isValid = false;
-					break;
-				}
-
-				current = current / 10;
-			}
-			if (isValid)
-				result.add(left);
-			left++;
-		}
-
-		return result;
-	}
-
-	public boolean judgeCircle(String moves) {
-
-		if (moves.length() == 0)
-			return true;
-		if (moves.length() % 2 != 0)
-			return false;
-
-		int leftRightCount = 0;
-		int upDownCount = 0;
-		for (int i = 0; i < moves.length(); i++) {
-			if (moves.charAt(i) == 'U')
-				upDownCount++;
-			else if (moves.charAt(i) == 'D')
-				upDownCount--;
-			else if (moves.charAt(i) == 'L')
-				leftRightCount--;
-			else
-				leftRightCount++;
-		}
-
-		if (upDownCount == 0 && leftRightCount == 0)
-			return true;
-
-		return false;
-
-	}
-
-	public int repeatedNTimes(int[] A) {
-
-		Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
-		int N = A.length / 2;
-		for (int i = 0; i < A.length; i++) {
-			if (counts.containsKey(A[i])) {
-				counts.put(A[i], counts.get(A[i]) + 1);
-				if (counts.get(A[i]) == N)
-					return A[i];
-			}
-
-			else
-				counts.put(A[i], 1);
-
-		}
-
-		return 0;
-
-	}
-
-	public int[][] flipAndInvertImage(int[][] A) {
-
-		for (int i = 0; i < A.length; i++) {
-
-			// reverse
-			int m = 0;
-			int k = A[i].length - 1;
-			while (m < k) {
-				int tmp = A[i][m];
-				A[i][m] = (A[i][k] == 1) ? 0 : 1;
-				A[i][k] = (tmp == 1) ? 0 : 1;
-				m++;
-				k--;
-			}
-			if (A[i].length % 2 != 0) {
-				int index = A[i].length / 2;
-				A[i][index] = (A[i][index] == 1) ? 0 : 1;
-			}
-		}
-
-		return A;
-	}
-
-	public int uniqueMorseRepresentations(String[] words) {
-
-		if (words.length == 0)
-			return 0;
-		else if (words.length == 1)
-			return 1;
-
-		String[] transformation = { ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-",
-				".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--",
-				"--.." };
-
-		HashSet<String> diff = new HashSet<String>();
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < words.length; i++) {
-			for (int j = 0; j < words[i].length(); j++) {
-				sb.append(transformation[words[i].charAt(j) - 'a']);
-			}
-			diff.add(sb.toString());
-			sb = new StringBuilder();
-		}
-
-		return diff.size();
-
-	}
-
-	public String removeOuterParentheses(String S) {
-
-		if (S.length() == 0)
-			return "";
-		List<String> cutted = new ArrayList<String>();
-		int count = 0;
-
-		StringBuilder value = new StringBuilder();
-
-		for (int i = 0; i < S.length(); i++) {
-			if (S.charAt(i) == '(') {
-				value.append('(');
-				count++;
-			} else {
-				value.append(')');
-				count--;
-			}
-
-			if (count == 0) {
-				cutted.add(value.toString());
-				value = new StringBuilder();
-			}
-
-		}
-
-		for (int i = 0; i < cutted.size(); i++) {
-			value.append(cutted.get(i).substring(1, cutted.get(i).length() - 1));
-		}
-
-		return value.toString();
-	}
-
-	public int maxDepth(TreeNode root) {
-		if (root == null)
-			return 0;
-
-		int maxLevel = 0;
-		int size = 0;
-
-		Queue<TreeNode> queue = new LinkedList<TreeNode>();
-		queue.add(root);
-		TreeNode it;
-
-		while (!queue.isEmpty()) {
-			maxLevel++;
-			size = queue.size();
-			for (int i = 0; i < size; i++) {
-				it = queue.poll();
-				if (it.left != null)
-					queue.add(it.left);
-				if (it.right != null)
-					queue.add(it.right);
-			}
-		}
-
-		return maxLevel;
-
-	}
-
-	public int rangeSumBST(TreeNode root, int L, int R) {
-
-		return SumNodes(root, L, R);
-	}
-
-	public int SumNodes(TreeNode root, int L, int R) {
-		if (root == null)
-			return 0;
-		if (root.val >= L && root.val <= R)
-			return root.val + SumNodes(root.left, L, R) + SumNodes(root.right, L, R);
-		else if (root.val < L)
-			return SumNodes(root.right, L, R);
-		else
-			return SumNodes(root.left, L, R);
-
-	}
-
-	public int getDecimalValue(ListNode head) {
-
-		if (head == null)
-			return 0;
-
-		StringBuilder binary = new StringBuilder();
-		while (head != null) {
-			binary.append(head.val);
-			head = head.next;
-		}
-
-		return Integer.parseInt(binary.toString(), 2);
-	}
-
-	public int findNumbers(int[] nums) {
-		int result = 0;
-
-		int mod = 10;
-		int count = 1;
-		for (int i = 0; i < nums.length; i++) {
-			mod = 10;
-			count = 1;
-			while (nums[i] % mod != nums[i]) {
-				count++;
-				mod = mod * 10;
-			}
-			if (count % 2 == 0)
-				result++;
-		}
-
-		return result;
-	}
-
-	public String addStrings(String num1, String num2) {
-		if (num1.length() == 0)
-			return num2;
-		else if (num2.length() == 0)
-			return num1;
-
-		StringBuilder result = new StringBuilder();
-
-		int[] resultArray = new int[Math.max(num1.length(), num2.length())];
-		int resultIterator = 0;
-
-		int firstNo, SecondNo, sum, remainder = 0;
-
-		int num1Iterator = num1.length() - 1;
-		int num2Iterator = num2.length() - 1;
-
-		while (num1Iterator >= 0 && num2Iterator >= 0) {
-			firstNo = num1.charAt(num1Iterator) - '0';
-			SecondNo = num2.charAt(num2Iterator) - '0';
-
-			sum = firstNo + SecondNo + remainder;
-			resultArray[resultIterator] = (sum % 10);
-			remainder = sum / 10;
-			num1Iterator--;
-			num2Iterator--;
-			resultIterator++;
-		}
-
-		while (num1Iterator >= 0) {
-			firstNo = num1.charAt(num1Iterator) - '0';
-			sum = firstNo + remainder;
-			resultArray[resultIterator] = (sum % 10);
-			remainder = sum / 10;
-			num1Iterator--;
-			resultIterator++;
-		}
-
-		while (num2Iterator >= 0) {
-			SecondNo = num2.charAt(num2Iterator) - '0';
-			sum = SecondNo + remainder;
-			resultArray[resultIterator] = (sum % 10);
-			remainder = sum / 10;
-			num2Iterator--;
-			resultIterator++;
-		}
-
-		if (remainder == 1)
-			result.append("1");
-
-		for (int i = resultArray.length - 1; i >= 0; i--) {
-			result.append(resultArray[i]);
-		}
-
-		return result.toString();
-
-	}
-
-	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-		ListNode result = new ListNode(0);
-
-		ListNode iterator = result;
-
-		int sum = 0;
-		int remainder = 0;
-		while (l1 != null && l2 != null) {
-			sum = l1.val + l2.val + remainder;
-			iterator.val = sum % 10;
-			remainder = sum / 10;
-			if (l1.next != null || l2.next != null) {
-				iterator.next = new ListNode(0);
-				iterator = iterator.next;
-			}
-			l1 = l1.next;
-			l2 = l2.next;
-		}
-
-		while (l1 != null) {
-			sum = l1.val + remainder;
-			iterator.val = sum % 10;
-			remainder = sum / 10;
-			if (l1.next != null) {
-				iterator.next = new ListNode(0);
-				iterator = iterator.next;
-			}
-
-			l1 = l1.next;
-		}
-
-		while (l2 != null) {
-			sum = l2.val + remainder;
-			iterator.val = sum % 10;
-			remainder = sum / 10;
-
-			if (l2.next != null) {
-				iterator.next = new ListNode(0);
-				iterator = iterator.next;
-			}
-
-			l2 = l2.next;
-		}
-
-		if (remainder == 1)
-			iterator.next = new ListNode(1);
-
-		return result;
-	}
-
-	public int maxLevelSum(TreeNode root) {
-		int maxLevel = 0;
-		long maxValue = 0;
-		long value = 0;
-		int currentLevel = 1;
-
-		Queue<TreeNode> nodes = new LinkedList<TreeNode>();
-
-		nodes.add(root);
-		int size = 0;
-
-		TreeNode node;
-		while (nodes.size() > 0) {
-			size = nodes.size();
-			for (int i = 0; i < size; i++) {
-				node = nodes.poll();
-				value = value + node.val;
-
-				if (node.left != null)
-					nodes.add(node.left);
-				if (node.right != null)
-					nodes.add(node.right);
-			}
-
-			if (maxValue < value) {
-				maxValue = value;
-				maxLevel = currentLevel;
-			}
-			currentLevel++;
-			value = 0;
-		}
-
-		return maxLevel;
-	}
-
-	public class CustomFunction {
-		public int f(int x, int y) {
-			return 0;
-		}
-	}
-
-	public int[] gardenNoAdj(int N, int[][] paths) {
-		int[] result = new int[N];
-
-		if (paths.length == 0) {
-			for (int i = 0; i < N; i++)
-				result[i] = 1;
-
-			return result;
-		}
-
-		Node2[] graph = new Node2[N];
-		for (int i = 0; i < graph.length; i++) {
-			Node2 node = new Node2();
-			// node.number = i+1;
-			graph[i] = node;
-		}
-
-		for (int i = 0; i < paths.length; i++) {
-			graph[paths[i][0] - 1].adjecentNodes.add(graph[paths[i][1] - 1]);
-			graph[paths[i][1] - 1].adjecentNodes.add(graph[paths[i][0] - 1]);
-		}
-
-		graph[0].color = 1;
-		result[0] = 1;
-
-		for (int i = 1; i < graph.length; i++) {
-			graph[i].color = getColor(graph[i].adjecentNodes, 1);
-			result[i] = graph[i].color;
-		}
-
-		return result;
-	}
-
-	public int getColor(List<Node2> adjecentNodes, int tryingNumber) {
-
-		for (int j = 0; j < adjecentNodes.size(); j++) {
-			if (adjecentNodes.get(j).color == tryingNumber)
-				return getColor(adjecentNodes, tryingNumber + 1);
-		}
-
-		return tryingNumber;
-
-	}
-
-	public int findJudge(int N, int[][] trust) {
-		int result = -1;
-
-		if (trust == null || trust.length == 0)
-			return result;
-
-		HashSet<Integer> NotJudge = new HashSet<Integer>();
-		HashSet<Integer> MayJudge = new HashSet<Integer>();
-
-		HashMap<Integer, Integer> trustList = new HashMap<Integer, Integer>();
-
-		int count;
-
-		for (int i = 0; i < trust.length; i++) {
-			count = 1;
-			NotJudge.add(trust[i][0]);
-			MayJudge.remove(trust[i][0]);
-
-			if (trustList.containsKey(trust[i][1])) {
-				count = trustList.get(trust[i][1]) + 1;
-				trustList.put(trust[i][1], count);
-			}
-
-			else
-				trustList.put(trust[i][1], 1);
-
-			if (count == N - 1 && !NotJudge.contains(trust[i][1])) {
-				MayJudge.add(trust[i][1]);
-			}
-
-		}
-
-		if (!MayJudge.isEmpty()) {
-			return MayJudge.iterator().next();
-		}
-
-		return result;
-	}
-
-	public int countServers(int[][] grid) {
-		int countOfVisited = 0;
-
-		Map<Integer, Integer> rows = new HashMap<Integer, Integer>();
-		Map<Integer, Integer> columns = new HashMap<Integer, Integer>();
-		HashSet<Integer> alreadyRemoved = new HashSet<Integer>();
-
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid[i].length; j++)
-				if (grid[i][j] == 1) {
-					if (rows.containsKey(i))
-						rows.put(i, rows.get(i) + 1);
-					else
-						rows.put(i, 1);
-
-					if (columns.containsKey(j))
-						columns.put(j, columns.get(j) + 1);
-					else
-						columns.put(j, 1);
-
-				}
-		}
-
-		Iterator hmIterator = rows.entrySet().iterator();
-		while (hmIterator.hasNext()) {
-			Map.Entry mapElement = (Map.Entry) hmIterator.next();
-			int count = (int) mapElement.getValue();
-			if (count > 1) {
-				countOfVisited += count;
-				if (columns.containsKey((int) mapElement.getKey())) {
-					countOfVisited -= 1;
-					System.out.println((int) mapElement.getKey());
-					alreadyRemoved.add((int) mapElement.getKey());
-				}
-
-			}
-
-		}
-
-		Iterator ColumnIterator = columns.entrySet().iterator();
-		while (ColumnIterator.hasNext()) {
-			Map.Entry element = (Map.Entry) ColumnIterator.next();
-			int count = (int) element.getValue();
-			if (count > 1) {
-				countOfVisited += count;
-
-				if (rows.containsKey((int) element.getKey()) && !alreadyRemoved.contains((int) element.getKey())) {
-					System.out.println((int) element.getKey());
-					countOfVisited -= 1;
-				}
-
-			}
-
-		}
-
-		return countOfVisited;
-	}
-
-	public boolean canVisitAllRooms(List<List<Integer>> rooms) {
-
-		boolean[] visited = new boolean[rooms.size()];
-		visited[0] = true;
-		Stack<Integer> myStack = new Stack<Integer>();
-		myStack.push(0);
-
-		while (!myStack.isEmpty()) {
-			int room = myStack.pop();
-
-			for (int i = 0; i < rooms.get(room).size(); i++) {
-				if (!visited[rooms.get(room).get(i)]) {
-					visited[rooms.get(room).get(i)] = true;
-					myStack.push(rooms.get(room).get(i));
-				}
-			}
-
-		}
-
-		for (int i = 0; i < visited.length; i++)
-			if (!visited[i])
-				return false;
-
-		return true;
-	}
 }
+				
+				
+				
