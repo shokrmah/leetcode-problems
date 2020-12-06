@@ -20,11 +20,17 @@ public class Az2020 {
 		if (position == null || position.length == 0)
 			return 0;
 
-		int minCost = 0;
-
+		int evenCount = 0;
+		int oddCount = 0;
 		
+		for (int i = 0; i < position.length; i++) {
+			if(position[i] % 2 == 0)
+				evenCount++;
+			else
+				oddCount++;
+		}
 
-		return minCost;
+		return Math.min(evenCount, oddCount);
 	}
 
 	public ListNode mergeKLists(ListNode[] lists) {
