@@ -1,10 +1,11 @@
 
-	public class PairString {
-	    String first;
-	    String second;
+public class PairString {
 
-	    public PairString(String first, String second) {
-	        this.first = first;
-	        this.second = second;
-	    }
+	public String first;
+	public String second;
+	
+	public PairString() {
+		this.first = first;
+		this.second = second;
 	}
+}
