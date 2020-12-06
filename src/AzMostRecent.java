@@ -15,6 +15,28 @@ import java.util.Stack;
 
 public class AzMostRecent {
 
+	public int numPairsDivisibleBy60(int[] time) {
+		
+		if(time == null || time.length == 0)
+			return 0;
+		
+		int[] mods = new int[61];
+		
+		int countOfPairs = 0;
+		int mod = 0;
+		for (int i = 0; i < time.length; i++) {
+			mod = time[i] % 60;
+			countOfPairs = countOfPairs + mods[60 - mod];
+			if(mod == 0)
+				mods[60]++;
+			else
+				mods[mod]++;
+		}
+		
+		return countOfPairs;
+	}
+
+	
 	public int maximalSquare(char[][] matrix) {
 		if (matrix == null || matrix.length == 0)
 			return 0;
