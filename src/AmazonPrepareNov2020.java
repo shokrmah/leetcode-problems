@@ -15,6 +15,27 @@ import java.util.TreeSet;
 
 public class AmazonPrepareNov2020 {
 
+	public int numPairsDivisibleBy60(int[] time) {
+		
+		if(time == null || time.length == 0)
+			return 0;
+		
+		int[] mods = new int[61];
+		
+		int countOfPairs = 0;
+		int mod = 0;
+		for (int i = 0; i < time.length; i++) {
+			mod = time[i] % 60;
+			countOfPairs = countOfPairs + mods[60 - mod];
+			if(mod == 0)
+				mods[60]++;
+			else
+				mods[mod]++;
+		}
+		
+		return countOfPairs;
+	}
+
 	public int twoSumUniquePairs(int[] numbers, int target) {
 		if (numbers == null || numbers.length == 0)
 			return 0;
@@ -84,9 +105,8 @@ public class AmazonPrepareNov2020 {
 		return itemsResult;
 	}
 
-	
-	public int chemicalDeliverySystem(List<Integer> requiremets, int flaskTypes,
-            int totalMarks, List<PairInt> markings) {
+	public int chemicalDeliverySystem(List<Integer> requiremets, int flaskTypes, int totalMarks,
+			List<PairInt> markings) {
 		Map<Integer, TreeSet<Integer>> flaskMarkings = new HashMap<>();
 		for (PairInt p : markings) {
 			flaskMarkings.putIfAbsent(p.first, new TreeSet<>());
