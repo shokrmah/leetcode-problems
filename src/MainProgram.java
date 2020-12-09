@@ -15,7 +15,10 @@ public class MainProgram {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("abc");
+		Az2020 az = new Az2020();
+		
+	System.out.println(az.minDifficulty(new int[] {11,111,22,222,33,333,44,444},6));
+		
 	}
 
 }
