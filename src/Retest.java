@@ -3,6 +3,46 @@ import java.util.Map.Entry;
 
 public class Retest {
 
+	public class PairInteger implements Comparable<PairInteger>{
+		int value1;
+		int value2;
+		int distance;
+		public PairInteger(int value1, int value2) {
+			this.value1 = value1;
+			this.value2 = value2;
+			distance = (int)(Math.pow(value1, 2) + Math.pow(value2, 2));
+		}
+		@Override
+		public int compareTo(PairInteger pi) {
+			return pi.distance - this.distance;
+		}
+	}
+	
+	public int[][] kClosest(int[][] points, int K) {
+		if (points == null || points.length == 0)
+			return new int[][] { {} };
+
+		int[][] kClosestPoints = new int[K][];
+		
+		PriorityQueue<PairInteger> heap = new PriorityQueue<PairInteger>();
+		
+		for (int i = 0; i < points.length; i++) {
+			heap.add(new PairInteger(points[i][0], points[i][1]));
+			if(heap.size() > K)
+				heap.poll();
+		}
+		
+		int index = 0;
+		while(!heap.isEmpty()) {
+			kClosestPoints[index] = new int[2];
+			kClosestPoints[index][0] = heap.peek().value1;
+			kClosestPoints[index][1] = heap.poll().value2;
+			index++;
+		}
+		
+		return kClosestPoints;
+	}
+
 	public String mostCommonWord(String paragraph, String[] banned) {
 		if (paragraph == null || paragraph.length() == 0)
 			return "";
@@ -24,7 +64,7 @@ public class Retest {
 
 		Map<String, Integer> wordCount = new HashMap<String, Integer>();
 		int count;
-		for (int i = 0; i < banned.length; i++) {
+		for (int i = 0; i < paragraph.length(); i++) {
 			c = paragraph.charAt(i);
 			if (c >= 'a' && c <= 'z') {
 				sb.append(c);

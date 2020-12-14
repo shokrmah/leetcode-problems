@@ -26,7 +26,8 @@ public class MainProgram {
 		
 		Retest rt = new Retest();
 		
-		rt.mostCommonWord("Bob hit a ball, the hit BALL flew far after it was hit.", new String[] {"hit"});
+		//rt.mostCommonWord("Bob hit a ball, the hit BALL flew far after it was hit.", new String[] {"hit"});
+		rt.kClosest(new int[][] {{3,3},{5,-1},{-2,4}}, 2);
 	}
 
 }
