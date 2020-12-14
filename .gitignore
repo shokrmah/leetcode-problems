@@ -1,2 +1,4 @@
 bin/PairInt.class
 bin/*.class
+bin/AzMostRecent.class
+bin/AzMostRecent$PairStringInt.class
