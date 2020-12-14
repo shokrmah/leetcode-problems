@@ -15,62 +15,90 @@ import java.util.Stack;
 
 public class AzMostRecent {
 
-    
-    public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
-        
-    	List<List<Integer>> criticalConnectionsList = new ArrayList<List<Integer>>();
-    	
-    	if(connections == null || connections.size() == 0)
-    		return criticalConnectionsList;
-    	
-    	// construct a graph based on the nodes in the edges (connections)
-    	List<Integer>[] nodesConnectionsGraph = new ArrayList[n];
-        
-        for (int i = 0; i < connections.size(); i++) {
-        	if(nodesConnectionsGraph[connections.get(i).get(0)] == null)
-        		nodesConnectionsGraph[connections.get(i).get(0)] = new ArrayList<Integer>();
-        	
-        	if(nodesConnectionsGraph[connections.get(i).get(1)] == null)
-        		nodesConnectionsGraph[connections.get(i).get(1)] = new ArrayList<Integer>();
-        	
-        	nodesConnectionsGraph[connections.get(i).get(0)].add(connections.get(i).get(1));
-        	nodesConnectionsGraph[connections.get(i).get(1)].add(connections.get(i).get(0));
-        	
+	public int findCircleNum(int[][] M) {
+		if (M == null || M.length == 0)
+			return 0;
+
+		int circleCount = 0;
+
+		int[] visited = new int[M.length];
+
+		for (int i = 0; i < M.length; i++) {
+			if (visited[i] == 0) {
+				dfsFriends(M, visited, i);
+				circleCount++;
+			}
 		}
-        
-        
-        // populate timestamps array using tarjan's algorithm
-        int[] timestamps = new int[n];
-        helper(nodesConnectionsGraph, 0, 0, 1, timestamps, criticalConnectionsList);
-        
-        return criticalConnectionsList;
-    }
-    
-    private int helper(List<Integer>[] nodesConnectionsGraph, int curr, int parent, int ts, int[] timestamps, List<List<Integer>> criticalConnectionsList) {
-        timestamps[curr] = ts;
-        for (int nextNode: nodesConnectionsGraph[curr]) {
-            // The next node ignores parent node
-            if (nextNode == parent) continue;
-            
-            // If next nodes have already been traversed, set the timestamp of
-            // current node to minimum of all next nodes
-            if (timestamps[nextNode] > 0)
-                timestamps[curr] = Math.min(timestamps[curr], timestamps[nextNode]);
-            else
-                // else, set the timestamp of current node to minimium of all it's children.
-                timestamps[curr] = Math.min(timestamps[curr], helper(nodesConnectionsGraph, nextNode, curr, ts + 1, timestamps, criticalConnectionsList));
-            
-            // As defined by Tarjan's algorithm, if the timestamp of the current node is already
-            // smaller than that of it's next node (child), then the edge connecting the
-            // current and next nodes make up a critical connection.
-            if (ts < timestamps[nextNode])
-            	criticalConnectionsList.add(Arrays.asList(curr, nextNode));
-        }
-        
-        return timestamps[curr];
-    }
-	
-	
+
+		return circleCount;
+	}
+
+	private void dfsFriends(int[][] M, int[] visited, int i) {
+		for (int j = 0; j < M.length; j++) {
+			if (M[i][j] == 1 && visited[j] == 0) {
+				visited[j] = 1;
+				dfsFriends(M, visited, j);
+			}
+		}
+	}
+
+	public List<List<Integer>> criticalConnections(int n, List<List<Integer>> connections) {
+
+		List<List<Integer>> criticalConnectionsList = new ArrayList<List<Integer>>();
+
+		if (connections == null || connections.size() == 0)
+			return criticalConnectionsList;
+
+		// construct a graph based on the nodes in the edges (connections)
+		List<Integer>[] nodesConnectionsGraph = new ArrayList[n];
+
+		for (int i = 0; i < connections.size(); i++) {
+			if (nodesConnectionsGraph[connections.get(i).get(0)] == null)
+				nodesConnectionsGraph[connections.get(i).get(0)] = new ArrayList<Integer>();
+
+			if (nodesConnectionsGraph[connections.get(i).get(1)] == null)
+				nodesConnectionsGraph[connections.get(i).get(1)] = new ArrayList<Integer>();
+
+			nodesConnectionsGraph[connections.get(i).get(0)].add(connections.get(i).get(1));
+			nodesConnectionsGraph[connections.get(i).get(1)].add(connections.get(i).get(0));
+
+		}
+
+		// populate timestamps array using tarjan's algorithm
+		int[] timestamps = new int[n];
+		helper(nodesConnectionsGraph, 0, 0, 1, timestamps, criticalConnectionsList);
+
+		return criticalConnectionsList;
+	}
+
+	private int helper(List<Integer>[] nodesConnectionsGraph, int curr, int parent, int ts, int[] timestamps,
+			List<List<Integer>> criticalConnectionsList) {
+		timestamps[curr] = ts;
+		for (int nextNode : nodesConnectionsGraph[curr]) {
+			// The next node ignores parent node
+			if (nextNode == parent)
+				continue;
+
+			// If next nodes have already been traversed, set the timestamp of
+			// current node to minimum of all next nodes
+			if (timestamps[nextNode] > 0)
+				timestamps[curr] = Math.min(timestamps[curr], timestamps[nextNode]);
+			else
+				// else, set the timestamp of current node to minimium of all it's children.
+				timestamps[curr] = Math.min(timestamps[curr],
+						helper(nodesConnectionsGraph, nextNode, curr, ts + 1, timestamps, criticalConnectionsList));
+
+			// As defined by Tarjan's algorithm, if the timestamp of the current node is
+			// already
+			// smaller than that of it's next node (child), then the edge connecting the
+			// current and next nodes make up a critical connection.
+			if (ts < timestamps[nextNode])
+				criticalConnectionsList.add(Arrays.asList(curr, nextNode));
+		}
+
+		return timestamps[curr];
+	}
+
 	public int minDifficulty(int[] jobDifficulty, int d) {
 
 //		 Let's use a function to represent our target value, say, F(i, j) means the minimum difficulty on i-th day who takes j-th work as its end.
@@ -169,29 +197,27 @@ public class AzMostRecent {
 		return true;
 	}
 
-	
 	public int numPairsDivisibleBy60(int[] time) {
-		
-		if(time == null || time.length == 0)
+
+		if (time == null || time.length == 0)
 			return 0;
-		
+
 		int[] mods = new int[61];
-		
+
 		int countOfPairs = 0;
 		int mod = 0;
 		for (int i = 0; i < time.length; i++) {
 			mod = time[i] % 60;
 			countOfPairs = countOfPairs + mods[60 - mod];
-			if(mod == 0)
+			if (mod == 0)
 				mods[60]++;
 			else
 				mods[mod]++;
 		}
-		
+
 		return countOfPairs;
 	}
 
-	
 	public int maximalSquare(char[][] matrix) {
 		if (matrix == null || matrix.length == 0)
 			return 0;
@@ -201,15 +227,13 @@ public class AzMostRecent {
 		for (int i = 0; i < matrix.length; i++) {
 			for (int j = 0; j < matrix[i].length; j++) {
 				if (matrix[i][j] == '1') {
-					
+
 				}
 			}
 		}
 
 		return maxSquare;
 	}
-	
-	
 
 	public int calPoints(String[] ops) {
 		if (ops == null || ops.length == 0)
