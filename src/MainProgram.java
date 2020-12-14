@@ -22,7 +22,11 @@ public class MainProgram {
 //			System.out.println(result.get(i).get(0) + " " + result.get(i).get(1));
 //		}
 
-		az.findCircleNum(new int[][] {{1,0,0,1},{0,1,1,0},{0,1,1,1},{1,0,1,1}});
+		//az.findCircleNum(new int[][] {{1,0,0,1},{0,1,1,0},{0,1,1,1},{1,0,1,1}});
+		
+		Retest rt = new Retest();
+		
+		rt.mostCommonWord("Bob hit a ball, the hit BALL flew far after it was hit.", new String[] {"hit"});
 	}
 
 }
