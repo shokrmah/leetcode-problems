@@ -15,6 +15,216 @@ import java.util.Stack;
 
 public class AzMostRecent {
 
+	
+    public int[] prisonAfterNDays(int[] cells, int N) {
+
+        HashMap<String, Integer> seen = new HashMap<>();
+        boolean isFastForwarded = false;
+
+        // step 1). run the simulation with hashmap
+        while (N > 0) {
+            if (!isFastForwarded) {
+                String s = this.cellsToBitmap2(cells);
+                if (seen.containsKey(s)) {
+                    // the length of the cycle is seen[state_key] - N 
+                	// N mod one cycle
+                    N %= seen.get(s) - N;
+                    isFastForwarded = true;
+                } else
+                    seen.put(s, N);
+            }
+            // check if there is still some steps remained,
+            // with or without the fast-forwarding.
+            if (N > 0) {
+                N -= 1;
+                cells = this.nextDay(cells);
+            }
+        }
+        return cells;
+    }
+    
+    protected String cellsToBitmap2(int[] cells) {
+        StringBuilder sb = new StringBuilder();
+        for (int cell : cells) {
+            sb.append(cell);
+        }
+        return sb.toString();
+    }
+
+    protected int[] nextDay(int[] cells) {
+        int[] newCells = new int[cells.length];
+        newCells[0] = 0;
+        for (int i = 1; i < cells.length - 1; i++)
+            newCells[i] = (cells[i - 1] == cells[i + 1]) ? 1 : 0;
+        newCells[cells.length - 1] = 0;
+        return newCells;
+    }
+
+	
+	
+	public List<String> mostVisitedPattern(String[] username, int[] timestamp, String[] website) {
+		// create a logs list ["user", "time", "page"]
+		List<List<String>> logs = new ArrayList<>();
+		for (int i = 0; i < username.length; i++) {
+			List<String> log = new ArrayList<>();
+			log.add(username[i]);
+			log.add(String.valueOf(timestamp[i]));
+			log.add(website[i]);
+			logs.add(log);
+		}
+
+		// sort logs list by the time, index 1 is time
+		Collections.sort(logs, (l1, l2) -> Integer.valueOf(l1.get(1)) - Integer.valueOf(l2.get(1)));
+
+		// create user -> List<page> map
+		Map<String, List<String>> users = new HashMap<>();
+		for (int i = 0; i < logs.size(); i++) {
+			List<String> log = logs.get(i);
+			List<String> pageList = users.getOrDefault(log.get(0), new ArrayList<>());
+			pageList.add(log.get(2));
+			users.put(log.get(0), pageList);
+		}
+
+		// create a 3-sequence -> count map
+		Map<String, Integer> counts = new HashMap<>();
+		int maxCount = 0;
+		// keep tracking of the most frequent one
+		String freqString = "";
+		for (String user : users.keySet()) {
+			Set<String> seqs = getAllSequence(users.get(user));
+			// user visits less than 3 pages
+			if (seqs == null)
+				continue;
+			for (String seq : seqs) {
+				int count = counts.getOrDefault(seq, 0);
+				counts.put(seq, ++count);
+				if (count > maxCount) {
+					freqString = seq;
+					maxCount = count;
+				} else if (count == maxCount) {
+					// pick word with small lexical order
+					freqString = seq.compareTo(freqString) < 0 ? seq : freqString;
+				}
+			}
+		}
+		return Arrays.asList(freqString.split(","));
+	}
+
+	// given a list of pages, return all the 3-sequence for a single user
+	// use set to avoid duplicated 3-sequence for the same user
+	// pick each page that comes after the previous one
+	// join 3-pages by "," and add to the set
+	// NOTE: Do not use Regex symbol such as ". * + ?"!!!!
+	private Set<String> getAllSequence(List<String> list) {
+		int len = list.size();
+		// can not form a 3-sequence
+		if (len < 3)
+			return null;
+		Set<String> set = new HashSet<>();
+		for (int i = 0; i < len - 2; i++) {
+			for (int j = i + 1; j < len - 1; j++) {
+				for (int k = j + 1; k < len; k++) {
+					StringBuilder sb = new StringBuilder(list.get(i));
+					sb.append(',');
+					sb.append(list.get(j));
+					sb.append(',');
+					sb.append(list.get(k));
+					set.add(sb.toString());
+				}
+			}
+		}
+		return set;
+	}
+
+	public class PairStringInteger {
+		String word;
+		int level;
+
+		public PairStringInteger(String word, int level) {
+			this.word = word;
+			this.level = level;
+		}
+	}
+
+	public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+
+		// Since all words are of same length.
+		int L = beginWord.length();
+
+		// Dictionary to hold combination of words that can be formed,
+		// from any given word. By changing one letter at a time.
+		Map<String, List<String>> allComboDict = new HashMap<>();
+
+		wordList.forEach(word -> {
+			for (int i = 0; i < L; i++) {
+				// Key is the generic word
+				// Value is a list of words which have the same intermediate generic word.
+				String newWord = word.substring(0, i) + '*' + word.substring(i + 1, L);
+				List<String> transformations = allComboDict.getOrDefault(newWord, new ArrayList<>());
+				transformations.add(word);
+				allComboDict.put(newWord, transformations);
+			}
+		});
+
+		// Queue for BFS
+		Queue<PairStringInteger> Q = new LinkedList<PairStringInteger>();
+		Q.add(new PairStringInteger(beginWord, 1));
+
+		// Visited to make sure we don't repeat processing same word.
+		Map<String, Boolean> visited = new HashMap<>();
+		visited.put(beginWord, true);
+
+		while (!Q.isEmpty()) {
+			PairStringInteger node = Q.remove();
+			String word = node.word;
+			int level = node.level;
+			for (int i = 0; i < L; i++) {
+
+				// Intermediate words for current word
+				String newWord = word.substring(0, i) + '*' + word.substring(i + 1, L);
+
+				// Next states are all the words which share the same intermediate state.
+				for (String adjacentWord : allComboDict.getOrDefault(newWord, new ArrayList<>())) {
+					// If at any point if we find what we are looking for
+					// i.e. the end word - we can return with the answer.
+					if (adjacentWord.equals(endWord)) {
+						return level + 1;
+					}
+					// Otherwise, add it to the BFS Queue. Also mark it visited
+					if (!visited.containsKey(adjacentWord)) {
+						visited.put(adjacentWord, true);
+						Q.add(new PairStringInteger(adjacentWord, level + 1));
+					}
+				}
+			}
+		}
+
+		return 0;
+	}
+
+	public int maximalSquare(char[][] matrix) {
+		if (matrix == null || matrix.length == 0)
+			return 0;
+
+		int maxSquare = 0;
+
+		int[][] dp = new int[matrix.length + 1][matrix[0].length + 1];
+
+		int rows = matrix.length;
+		int cols = matrix[0].length;
+
+		for (int i = 1; i <= rows; i++) {
+			for (int j = 1; j <= cols; j++) {
+				if (matrix[i - 1][j - 1] == '1') {
+					dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+					maxSquare = Math.max(maxSquare, dp[i][j]);
+				}
+			}
+		}
+
+		return maxSquare * maxSquare;
+	}
+
 	public int findCircleNum(int[][] M) {
 		if (M == null || M.length == 0)
 			return 0;
@@ -216,23 +426,6 @@ public class AzMostRecent {
 		}
 
 		return countOfPairs;
-	}
-
-	public int maximalSquare(char[][] matrix) {
-		if (matrix == null || matrix.length == 0)
-			return 0;
-
-		int maxSquare = 0;
-
-		for (int i = 0; i < matrix.length; i++) {
-			for (int j = 0; j < matrix[i].length; j++) {
-				if (matrix[i][j] == '1') {
-
-				}
-			}
-		}
-
-		return maxSquare;
 	}
 
 	public int calPoints(String[] ops) {

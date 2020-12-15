@@ -24,10 +24,10 @@ public class MainProgram {
 
 		//az.findCircleNum(new int[][] {{1,0,0,1},{0,1,1,0},{0,1,1,1},{1,0,1,1}});
 		
-		Retest rt = new Retest();
 		
 		//rt.mostCommonWord("Bob hit a ball, the hit BALL flew far after it was hit.", new String[] {"hit"});
-		rt.kClosest(new int[][] {{3,3},{5,-1},{-2,4}}, 2);
+		//rt.kClosest(new int[][] {{3,3},{5,-1},{-2,4}}, 2);
+		az.minDifficulty(new int[] {11,111,22,222,33,333,44,444}, 6);
 	}
 
 }
